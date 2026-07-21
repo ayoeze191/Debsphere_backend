@@ -1,0 +1,221 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  ADMIN
+  INSTRUCTOR
+  STUDENT
+}
+
+enum VideoStatus {
+  UPLOADING
+  PROCESSING
+  READY
+  FAILED
+}
+
+enum AuthProvider {
+  LOCAL
+  GOOGLE
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+model User {
+  id           String       @id @default(cuid())
+  firstName    String
+  lastName     String
+  email        String       @unique
+  password     String
+  role         UserRole     @default(STUDENT)
+  profileImage String?
+  googleId     String?      @unique
+  avatar       String?
+  provider     AuthProvider @default(LOCAL)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  enrollments  Enrollment[]
+  progress     LessonProgress[]
+  certificates Certificate[]
+  courses      Course[]
+}
+
+model Course {
+  id           String  @id @default(cuid())
+  title        String
+  slug         String  @unique
+  description  String
+  thumbnail    String
+  price        Decimal
+  isPublished  Boolean @default(false)
+  duration     String?
+  categoryId   String?
+  instructorId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  category     Category?     @relation(fields: [categoryId], references: [id])
+  instructor   User          @relation(fields: [instructorId], references: [id])
+  certificates Certificate[]
+  payment      Payment[]
+  sections     Section[]
+  enrollments  Enrollment[]
+  outcomes     String[]
+}
+
+model Category {
+  id   String @id @default(cuid())
+  name String @unique
+
+  courses Course[]
+}
+
+model Section {
+  id       String @id @default(cuid())
+  title    String
+  position Int
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id])
+
+  lessons Lesson[]
+}
+
+model Lesson {
+  id String @id @default(cuid())
+
+  title       String
+  description String?
+  duration    Int
+  position    Int
+
+  videoId String? @unique
+  video   Video?  @relation(fields: [videoId], references: [id])
+
+  sectionId         String
+  section           Section          @relation(fields: [sectionId], references: [id])
+  progress          LessonProgress[]
+  enrollmentsOnLast Enrollment[]
+}
+
+model Video {
+  id String @id @default(cuid())
+
+  originalUrl String
+  hlsUrl      String?
+  thumbnail   String?
+  duration    Int?
+  status      VideoStatus
+
+  lesson Lesson?
+
+  createdAt DateTime @default(now())
+}
+
+model Enrollment {
+  id String @id @default(cuid())
+
+  userId String
+
+  courseId         String
+  completedLessons Int?
+  totalLessons     Int?
+  lastLessonId     String?
+  lastLesson       Lesson? @relation(fields: [lastLessonId], references: [id])
+
+  enrolledAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  course Course @relation(fields: [courseId], references: [id])
+
+  @@unique([userId, courseId])
+}
+
+model LessonProgress {
+  id String @id @default(cuid())
+
+  userId String
+
+  lessonId String
+
+  watched Boolean @default(false)
+
+  completedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id])
+
+  lesson Lesson @relation(fields: [lessonId], references: [id])
+
+  @@unique([userId, lessonId])
+}
+
+model Payment {
+  id String @id @default(cuid())
+
+  amount Decimal
+
+  reference String @unique
+
+  status PaymentStatus
+
+  userId String
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  email String
+
+  phoneNumber String
+
+  fullName String
+}
+
+model Certificate {
+  id String @id @default(cuid())
+
+  userId   String
+  courseId String
+
+  certificateNo String   @unique
+  issuedAt      DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id])
+  course Course @relation(fields: [courseId], references: [id])
+}
+
+model Review {
+  id String @id @default(cuid())
+
+  rating Int
+
+  comment String?
+
+  userId String
+
+  courseId String
+}
+
+model WebhookEvent {
+  id          String   @id @default(cuid())
+  eventId     String   @unique
+  eventType   String
+  payload     Json
+  processedAt DateTime @default(now())
+
+  createdAt DateTime @default(now())
+}
