@@ -242,6 +242,7 @@ export declare const ModelName: {
     readonly Payment: 'Payment';
     readonly Certificate: 'Certificate';
     readonly Review: 'Review';
+    readonly WebhookEvent: 'WebhookEvent';
 };
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
 export interface TypeMapCb<GlobalOmitOptions = {}> extends runtime.Types.Utils.Fn<{
@@ -254,7 +255,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         omit: GlobalOmitOptions;
     };
     meta: {
-        modelProps: "user" | "course" | "category" | "section" | "lesson" | "video" | "enrollment" | "lessonProgress" | "payment" | "certificate" | "review";
+        modelProps: "user" | "course" | "category" | "section" | "lesson" | "video" | "enrollment" | "lessonProgress" | "payment" | "certificate" | "review" | "webhookEvent";
         txIsolationLevel: TransactionIsolationLevel;
     };
     model: {
@@ -1072,6 +1073,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
                 };
             };
         };
+        WebhookEvent: {
+            payload: Prisma.$WebhookEventPayload<ExtArgs>;
+            fields: Prisma.WebhookEventFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.WebhookEventFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookEventPayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.WebhookEventFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookEventPayload>;
+                };
+                findFirst: {
+                    args: Prisma.WebhookEventFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookEventPayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.WebhookEventFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookEventPayload>;
+                };
+                findMany: {
+                    args: Prisma.WebhookEventFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookEventPayload>[];
+                };
+                create: {
+                    args: Prisma.WebhookEventCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookEventPayload>;
+                };
+                createMany: {
+                    args: Prisma.WebhookEventCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.WebhookEventCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookEventPayload>[];
+                };
+                delete: {
+                    args: Prisma.WebhookEventDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookEventPayload>;
+                };
+                update: {
+                    args: Prisma.WebhookEventUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookEventPayload>;
+                };
+                deleteMany: {
+                    args: Prisma.WebhookEventDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.WebhookEventUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.WebhookEventUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookEventPayload>[];
+                };
+                upsert: {
+                    args: Prisma.WebhookEventUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookEventPayload>;
+                };
+                aggregate: {
+                    args: Prisma.WebhookEventAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateWebhookEvent>;
+                };
+                groupBy: {
+                    args: Prisma.WebhookEventGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.WebhookEventGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.WebhookEventCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.WebhookEventCountAggregateOutputType> | number;
+                };
+            };
+        };
     };
 } & {
     other: {
@@ -1129,10 +1204,12 @@ export declare const CourseScalarFieldEnum: {
     readonly thumbnail: 'thumbnail';
     readonly price: 'price';
     readonly isPublished: 'isPublished';
+    readonly duration: 'duration';
     readonly categoryId: 'categoryId';
     readonly instructorId: 'instructorId';
     readonly createdAt: 'createdAt';
     readonly updatedAt: 'updatedAt';
+    readonly outcomes: 'outcomes';
 };
 export type CourseScalarFieldEnum = (typeof CourseScalarFieldEnum)[keyof typeof CourseScalarFieldEnum];
 export declare const CategoryScalarFieldEnum: {
@@ -1171,6 +1248,9 @@ export declare const EnrollmentScalarFieldEnum: {
     readonly id: 'id';
     readonly userId: 'userId';
     readonly courseId: 'courseId';
+    readonly completedLessons: 'completedLessons';
+    readonly totalLessons: 'totalLessons';
+    readonly lastLessonId: 'lastLessonId';
     readonly enrolledAt: 'enrolledAt';
 };
 export type EnrollmentScalarFieldEnum = (typeof EnrollmentScalarFieldEnum)[keyof typeof EnrollmentScalarFieldEnum];
@@ -1190,6 +1270,9 @@ export declare const PaymentScalarFieldEnum: {
     readonly userId: 'userId';
     readonly courseId: 'courseId';
     readonly createdAt: 'createdAt';
+    readonly email: 'email';
+    readonly phoneNumber: 'phoneNumber';
+    readonly fullName: 'fullName';
 };
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum];
 export declare const CertificateScalarFieldEnum: {
@@ -1208,11 +1291,24 @@ export declare const ReviewScalarFieldEnum: {
     readonly courseId: 'courseId';
 };
 export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum];
+export declare const WebhookEventScalarFieldEnum: {
+    readonly id: 'id';
+    readonly eventId: 'eventId';
+    readonly eventType: 'eventType';
+    readonly payload: 'payload';
+    readonly processedAt: 'processedAt';
+    readonly createdAt: 'createdAt';
+};
+export type WebhookEventScalarFieldEnum = (typeof WebhookEventScalarFieldEnum)[keyof typeof WebhookEventScalarFieldEnum];
 export declare const SortOrder: {
     readonly asc: 'asc';
     readonly desc: 'desc';
 };
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder];
+export declare const JsonNullValueInput: {
+    readonly JsonNull: runtime.JsonNullClass;
+};
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput];
 export declare const QueryMode: {
     readonly default: 'default';
     readonly insensitive: 'insensitive';
@@ -1223,6 +1319,12 @@ export declare const NullsOrder: {
     readonly last: 'last';
 };
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder];
+export declare const JsonNullValueFilter: {
+    readonly DbNull: runtime.DbNullClass;
+    readonly JsonNull: runtime.JsonNullClass;
+    readonly AnyNull: runtime.AnyNullClass;
+};
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter];
 /**
  * Field references
  */
@@ -1294,6 +1396,14 @@ export type EnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pr
  * Reference to a field of type 'PaymentStatus[]'
  */
 export type ListEnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentStatus[]'>;
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>;
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>;
 /**
  * Reference to a field of type 'Float'
  */
@@ -1422,6 +1532,7 @@ export type GlobalOmitConfig = {
     payment?: Prisma.PaymentOmit;
     certificate?: Prisma.CertificateOmit;
     review?: Prisma.ReviewOmit;
+    webhookEvent?: Prisma.WebhookEventOmit;
 };
 export type LogLevel = 'info' | 'query' | 'warn' | 'error';
 export type LogDefinition = {

@@ -78,7 +78,8 @@ export const ModelName = {
     LessonProgress: 'LessonProgress',
     Payment: 'Payment',
     Certificate: 'Certificate',
-    Review: 'Review'
+    Review: 'Review',
+    WebhookEvent: 'WebhookEvent'
 };
 /**
  * Enums
@@ -111,10 +112,12 @@ export const CourseScalarFieldEnum = {
     thumbnail: 'thumbnail',
     price: 'price',
     isPublished: 'isPublished',
+    duration: 'duration',
     categoryId: 'categoryId',
     instructorId: 'instructorId',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    outcomes: 'outcomes'
 };
 export const CategoryScalarFieldEnum = {
     id: 'id',
@@ -148,6 +151,9 @@ export const EnrollmentScalarFieldEnum = {
     id: 'id',
     userId: 'userId',
     courseId: 'courseId',
+    completedLessons: 'completedLessons',
+    totalLessons: 'totalLessons',
+    lastLessonId: 'lastLessonId',
     enrolledAt: 'enrolledAt'
 };
 export const LessonProgressScalarFieldEnum = {
@@ -164,7 +170,10 @@ export const PaymentScalarFieldEnum = {
     status: 'status',
     userId: 'userId',
     courseId: 'courseId',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    email: 'email',
+    phoneNumber: 'phoneNumber',
+    fullName: 'fullName'
 };
 export const CertificateScalarFieldEnum = {
     id: 'id',
@@ -180,9 +189,20 @@ export const ReviewScalarFieldEnum = {
     userId: 'userId',
     courseId: 'courseId'
 };
+export const WebhookEventScalarFieldEnum = {
+    id: 'id',
+    eventId: 'eventId',
+    eventType: 'eventType',
+    payload: 'payload',
+    processedAt: 'processedAt',
+    createdAt: 'createdAt'
+};
 export const SortOrder = {
     asc: 'asc',
     desc: 'desc'
+};
+export const JsonNullValueInput = {
+    JsonNull: JsonNull
 };
 export const QueryMode = {
     default: 'default',
@@ -191,6 +211,11 @@ export const QueryMode = {
 export const NullsOrder = {
     first: 'first',
     last: 'last'
+};
+export const JsonNullValueFilter = {
+    DbNull: DbNull,
+    JsonNull: JsonNull,
+    AnyNull: AnyNull
 };
 export const defineExtension = runtime.Extensions.defineExtension;
 //# sourceMappingURL=prismaNamespace.js.map

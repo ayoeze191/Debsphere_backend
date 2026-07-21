@@ -152,6 +152,7 @@ export type LessonProgressOrderByWithRelationInput = {
 };
 export type LessonProgressWhereUniqueInput = Prisma.AtLeast<{
     id?: string;
+    userId_lessonId?: Prisma.LessonProgressUserIdLessonIdCompoundUniqueInput;
     AND?: Prisma.LessonProgressWhereInput | Prisma.LessonProgressWhereInput[];
     OR?: Prisma.LessonProgressWhereInput[];
     NOT?: Prisma.LessonProgressWhereInput | Prisma.LessonProgressWhereInput[];
@@ -161,7 +162,7 @@ export type LessonProgressWhereUniqueInput = Prisma.AtLeast<{
     completedAt?: Prisma.DateTimeNullableFilter<"LessonProgress"> | Date | string | null;
     user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
     lesson?: Prisma.XOR<Prisma.LessonScalarRelationFilter, Prisma.LessonWhereInput>;
-}, "id">;
+}, "id" | "userId_lessonId">;
 export type LessonProgressOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
     userId?: Prisma.SortOrder;
@@ -236,6 +237,10 @@ export type LessonProgressListRelationFilter = {
 };
 export type LessonProgressOrderByRelationAggregateInput = {
     _count?: Prisma.SortOrder;
+};
+export type LessonProgressUserIdLessonIdCompoundUniqueInput = {
+    userId: string;
+    lessonId: string;
 };
 export type LessonProgressCountOrderByAggregateInput = {
     id?: Prisma.SortOrder;

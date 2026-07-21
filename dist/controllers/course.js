@@ -1,16 +1,33 @@
 import { Prisma } from "../prisma/client.js";
 export const GetAllCourse = async (req, res) => {
-    const all_courses = await Prisma.course.findMany();
+    const all_courses = await Prisma.course.findMany({
+        where: { isPublished: true },
+        include: {
+            category: true,
+        },
+    });
     return res.status(201).json({ courses: all_courses });
 };
 export const GetCourse = async (req, res) => {
-    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-    if (!id) {
+    const slug = Array.isArray(req.params.slug)
+        ? req.params.slug[0]
+        : req.params.slug;
+    console.log(slug);
+    if (!slug) {
         return res.status(400).json({ message: "Course id is required" });
     }
     const course = await Prisma.course.findFirst({
         where: {
-            id,
+            slug,
+        },
+        include: {
+            sections: {
+                include: {
+                    lessons: true,
+                },
+            },
+            category: true,
+            instructor: true,
         },
     });
     if (!course) {

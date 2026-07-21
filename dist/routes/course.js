@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { GetAllCourse, GetCourse } from "./../controllers/course.js";
 const router = Router();
-router.post("/", GetAllCourse);
-router.post("/:id", GetAllCourse);
+router.get("/", GetAllCourse);
+router.get("/:slug", GetCourse);
 export default router;
 //# sourceMappingURL=course.js.map

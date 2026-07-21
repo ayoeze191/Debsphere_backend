@@ -57,4 +57,9 @@ export type Certificate = Prisma.CertificateModel;
  *
  */
 export type Review = Prisma.ReviewModel;
+/**
+ * Model WebhookEvent
+ *
+ */
+export type WebhookEvent = Prisma.WebhookEventModel;
 //# sourceMappingURL=browser.d.ts.map

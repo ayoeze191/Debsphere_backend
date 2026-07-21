@@ -238,6 +238,17 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
     get review(): Prisma.ReviewDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
+    /**
+     * `prisma.webhookEvent`: Exposes CRUD operations for the **WebhookEvent** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more WebhookEvents
+      * const webhookEvents = await prisma.webhookEvent.findMany()
+      * ```
+      */
+    get webhookEvent(): Prisma.WebhookEventDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
 }
 export declare function getPrismaClientClass(): PrismaClientConstructor;
 //# sourceMappingURL=class.d.ts.map

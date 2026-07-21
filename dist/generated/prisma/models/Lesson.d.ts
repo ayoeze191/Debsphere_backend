@@ -191,6 +191,7 @@ export type LessonWhereInput = {
     video?: Prisma.XOR<Prisma.VideoNullableScalarRelationFilter, Prisma.VideoWhereInput> | null;
     section?: Prisma.XOR<Prisma.SectionScalarRelationFilter, Prisma.SectionWhereInput>;
     progress?: Prisma.LessonProgressListRelationFilter;
+    enrollmentsOnLast?: Prisma.EnrollmentListRelationFilter;
 };
 export type LessonOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
@@ -203,6 +204,7 @@ export type LessonOrderByWithRelationInput = {
     video?: Prisma.VideoOrderByWithRelationInput;
     section?: Prisma.SectionOrderByWithRelationInput;
     progress?: Prisma.LessonProgressOrderByRelationAggregateInput;
+    enrollmentsOnLast?: Prisma.EnrollmentOrderByRelationAggregateInput;
 };
 export type LessonWhereUniqueInput = Prisma.AtLeast<{
     id?: string;
@@ -218,6 +220,7 @@ export type LessonWhereUniqueInput = Prisma.AtLeast<{
     video?: Prisma.XOR<Prisma.VideoNullableScalarRelationFilter, Prisma.VideoWhereInput> | null;
     section?: Prisma.XOR<Prisma.SectionScalarRelationFilter, Prisma.SectionWhereInput>;
     progress?: Prisma.LessonProgressListRelationFilter;
+    enrollmentsOnLast?: Prisma.EnrollmentListRelationFilter;
 }, "id" | "videoId">;
 export type LessonOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
@@ -254,6 +257,7 @@ export type LessonCreateInput = {
     video?: Prisma.VideoCreateNestedOneWithoutLessonInput;
     section: Prisma.SectionCreateNestedOneWithoutLessonsInput;
     progress?: Prisma.LessonProgressCreateNestedManyWithoutLessonInput;
+    enrollmentsOnLast?: Prisma.EnrollmentCreateNestedManyWithoutLastLessonInput;
 };
 export type LessonUncheckedCreateInput = {
     id?: string;
@@ -264,6 +268,7 @@ export type LessonUncheckedCreateInput = {
     videoId?: string | null;
     sectionId: string;
     progress?: Prisma.LessonProgressUncheckedCreateNestedManyWithoutLessonInput;
+    enrollmentsOnLast?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutLastLessonInput;
 };
 export type LessonUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -274,6 +279,7 @@ export type LessonUpdateInput = {
     video?: Prisma.VideoUpdateOneWithoutLessonNestedInput;
     section?: Prisma.SectionUpdateOneRequiredWithoutLessonsNestedInput;
     progress?: Prisma.LessonProgressUpdateManyWithoutLessonNestedInput;
+    enrollmentsOnLast?: Prisma.EnrollmentUpdateManyWithoutLastLessonNestedInput;
 };
 export type LessonUncheckedUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -284,6 +290,7 @@ export type LessonUncheckedUpdateInput = {
     videoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sectionId?: Prisma.StringFieldUpdateOperationsInput | string;
     progress?: Prisma.LessonProgressUncheckedUpdateManyWithoutLessonNestedInput;
+    enrollmentsOnLast?: Prisma.EnrollmentUncheckedUpdateManyWithoutLastLessonNestedInput;
 };
 export type LessonCreateManyInput = {
     id?: string;
@@ -427,6 +434,20 @@ export type LessonUncheckedUpdateOneWithoutVideoNestedInput = {
     connect?: Prisma.LessonWhereUniqueInput;
     update?: Prisma.XOR<Prisma.XOR<Prisma.LessonUpdateToOneWithWhereWithoutVideoInput, Prisma.LessonUpdateWithoutVideoInput>, Prisma.LessonUncheckedUpdateWithoutVideoInput>;
 };
+export type LessonCreateNestedOneWithoutEnrollmentsOnLastInput = {
+    create?: Prisma.XOR<Prisma.LessonCreateWithoutEnrollmentsOnLastInput, Prisma.LessonUncheckedCreateWithoutEnrollmentsOnLastInput>;
+    connectOrCreate?: Prisma.LessonCreateOrConnectWithoutEnrollmentsOnLastInput;
+    connect?: Prisma.LessonWhereUniqueInput;
+};
+export type LessonUpdateOneWithoutEnrollmentsOnLastNestedInput = {
+    create?: Prisma.XOR<Prisma.LessonCreateWithoutEnrollmentsOnLastInput, Prisma.LessonUncheckedCreateWithoutEnrollmentsOnLastInput>;
+    connectOrCreate?: Prisma.LessonCreateOrConnectWithoutEnrollmentsOnLastInput;
+    upsert?: Prisma.LessonUpsertWithoutEnrollmentsOnLastInput;
+    disconnect?: Prisma.LessonWhereInput | boolean;
+    delete?: Prisma.LessonWhereInput | boolean;
+    connect?: Prisma.LessonWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.LessonUpdateToOneWithWhereWithoutEnrollmentsOnLastInput, Prisma.LessonUpdateWithoutEnrollmentsOnLastInput>, Prisma.LessonUncheckedUpdateWithoutEnrollmentsOnLastInput>;
+};
 export type LessonCreateNestedOneWithoutProgressInput = {
     create?: Prisma.XOR<Prisma.LessonCreateWithoutProgressInput, Prisma.LessonUncheckedCreateWithoutProgressInput>;
     connectOrCreate?: Prisma.LessonCreateOrConnectWithoutProgressInput;
@@ -447,6 +468,7 @@ export type LessonCreateWithoutSectionInput = {
     position: number;
     video?: Prisma.VideoCreateNestedOneWithoutLessonInput;
     progress?: Prisma.LessonProgressCreateNestedManyWithoutLessonInput;
+    enrollmentsOnLast?: Prisma.EnrollmentCreateNestedManyWithoutLastLessonInput;
 };
 export type LessonUncheckedCreateWithoutSectionInput = {
     id?: string;
@@ -456,6 +478,7 @@ export type LessonUncheckedCreateWithoutSectionInput = {
     position: number;
     videoId?: string | null;
     progress?: Prisma.LessonProgressUncheckedCreateNestedManyWithoutLessonInput;
+    enrollmentsOnLast?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutLastLessonInput;
 };
 export type LessonCreateOrConnectWithoutSectionInput = {
     where: Prisma.LessonWhereUniqueInput;
@@ -498,6 +521,7 @@ export type LessonCreateWithoutVideoInput = {
     position: number;
     section: Prisma.SectionCreateNestedOneWithoutLessonsInput;
     progress?: Prisma.LessonProgressCreateNestedManyWithoutLessonInput;
+    enrollmentsOnLast?: Prisma.EnrollmentCreateNestedManyWithoutLastLessonInput;
 };
 export type LessonUncheckedCreateWithoutVideoInput = {
     id?: string;
@@ -507,6 +531,7 @@ export type LessonUncheckedCreateWithoutVideoInput = {
     position: number;
     sectionId: string;
     progress?: Prisma.LessonProgressUncheckedCreateNestedManyWithoutLessonInput;
+    enrollmentsOnLast?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutLastLessonInput;
 };
 export type LessonCreateOrConnectWithoutVideoInput = {
     where: Prisma.LessonWhereUniqueInput;
@@ -529,6 +554,7 @@ export type LessonUpdateWithoutVideoInput = {
     position?: Prisma.IntFieldUpdateOperationsInput | number;
     section?: Prisma.SectionUpdateOneRequiredWithoutLessonsNestedInput;
     progress?: Prisma.LessonProgressUpdateManyWithoutLessonNestedInput;
+    enrollmentsOnLast?: Prisma.EnrollmentUpdateManyWithoutLastLessonNestedInput;
 };
 export type LessonUncheckedUpdateWithoutVideoInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -536,6 +562,60 @@ export type LessonUncheckedUpdateWithoutVideoInput = {
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     duration?: Prisma.IntFieldUpdateOperationsInput | number;
     position?: Prisma.IntFieldUpdateOperationsInput | number;
+    sectionId?: Prisma.StringFieldUpdateOperationsInput | string;
+    progress?: Prisma.LessonProgressUncheckedUpdateManyWithoutLessonNestedInput;
+    enrollmentsOnLast?: Prisma.EnrollmentUncheckedUpdateManyWithoutLastLessonNestedInput;
+};
+export type LessonCreateWithoutEnrollmentsOnLastInput = {
+    id?: string;
+    title: string;
+    description?: string | null;
+    duration: number;
+    position: number;
+    video?: Prisma.VideoCreateNestedOneWithoutLessonInput;
+    section: Prisma.SectionCreateNestedOneWithoutLessonsInput;
+    progress?: Prisma.LessonProgressCreateNestedManyWithoutLessonInput;
+};
+export type LessonUncheckedCreateWithoutEnrollmentsOnLastInput = {
+    id?: string;
+    title: string;
+    description?: string | null;
+    duration: number;
+    position: number;
+    videoId?: string | null;
+    sectionId: string;
+    progress?: Prisma.LessonProgressUncheckedCreateNestedManyWithoutLessonInput;
+};
+export type LessonCreateOrConnectWithoutEnrollmentsOnLastInput = {
+    where: Prisma.LessonWhereUniqueInput;
+    create: Prisma.XOR<Prisma.LessonCreateWithoutEnrollmentsOnLastInput, Prisma.LessonUncheckedCreateWithoutEnrollmentsOnLastInput>;
+};
+export type LessonUpsertWithoutEnrollmentsOnLastInput = {
+    update: Prisma.XOR<Prisma.LessonUpdateWithoutEnrollmentsOnLastInput, Prisma.LessonUncheckedUpdateWithoutEnrollmentsOnLastInput>;
+    create: Prisma.XOR<Prisma.LessonCreateWithoutEnrollmentsOnLastInput, Prisma.LessonUncheckedCreateWithoutEnrollmentsOnLastInput>;
+    where?: Prisma.LessonWhereInput;
+};
+export type LessonUpdateToOneWithWhereWithoutEnrollmentsOnLastInput = {
+    where?: Prisma.LessonWhereInput;
+    data: Prisma.XOR<Prisma.LessonUpdateWithoutEnrollmentsOnLastInput, Prisma.LessonUncheckedUpdateWithoutEnrollmentsOnLastInput>;
+};
+export type LessonUpdateWithoutEnrollmentsOnLastInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    duration?: Prisma.IntFieldUpdateOperationsInput | number;
+    position?: Prisma.IntFieldUpdateOperationsInput | number;
+    video?: Prisma.VideoUpdateOneWithoutLessonNestedInput;
+    section?: Prisma.SectionUpdateOneRequiredWithoutLessonsNestedInput;
+    progress?: Prisma.LessonProgressUpdateManyWithoutLessonNestedInput;
+};
+export type LessonUncheckedUpdateWithoutEnrollmentsOnLastInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    duration?: Prisma.IntFieldUpdateOperationsInput | number;
+    position?: Prisma.IntFieldUpdateOperationsInput | number;
+    videoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sectionId?: Prisma.StringFieldUpdateOperationsInput | string;
     progress?: Prisma.LessonProgressUncheckedUpdateManyWithoutLessonNestedInput;
 };
@@ -547,6 +627,7 @@ export type LessonCreateWithoutProgressInput = {
     position: number;
     video?: Prisma.VideoCreateNestedOneWithoutLessonInput;
     section: Prisma.SectionCreateNestedOneWithoutLessonsInput;
+    enrollmentsOnLast?: Prisma.EnrollmentCreateNestedManyWithoutLastLessonInput;
 };
 export type LessonUncheckedCreateWithoutProgressInput = {
     id?: string;
@@ -556,6 +637,7 @@ export type LessonUncheckedCreateWithoutProgressInput = {
     position: number;
     videoId?: string | null;
     sectionId: string;
+    enrollmentsOnLast?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutLastLessonInput;
 };
 export type LessonCreateOrConnectWithoutProgressInput = {
     where: Prisma.LessonWhereUniqueInput;
@@ -578,6 +660,7 @@ export type LessonUpdateWithoutProgressInput = {
     position?: Prisma.IntFieldUpdateOperationsInput | number;
     video?: Prisma.VideoUpdateOneWithoutLessonNestedInput;
     section?: Prisma.SectionUpdateOneRequiredWithoutLessonsNestedInput;
+    enrollmentsOnLast?: Prisma.EnrollmentUpdateManyWithoutLastLessonNestedInput;
 };
 export type LessonUncheckedUpdateWithoutProgressInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -587,6 +670,7 @@ export type LessonUncheckedUpdateWithoutProgressInput = {
     position?: Prisma.IntFieldUpdateOperationsInput | number;
     videoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sectionId?: Prisma.StringFieldUpdateOperationsInput | string;
+    enrollmentsOnLast?: Prisma.EnrollmentUncheckedUpdateManyWithoutLastLessonNestedInput;
 };
 export type LessonCreateManySectionInput = {
     id?: string;
@@ -604,6 +688,7 @@ export type LessonUpdateWithoutSectionInput = {
     position?: Prisma.IntFieldUpdateOperationsInput | number;
     video?: Prisma.VideoUpdateOneWithoutLessonNestedInput;
     progress?: Prisma.LessonProgressUpdateManyWithoutLessonNestedInput;
+    enrollmentsOnLast?: Prisma.EnrollmentUpdateManyWithoutLastLessonNestedInput;
 };
 export type LessonUncheckedUpdateWithoutSectionInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -613,6 +698,7 @@ export type LessonUncheckedUpdateWithoutSectionInput = {
     position?: Prisma.IntFieldUpdateOperationsInput | number;
     videoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     progress?: Prisma.LessonProgressUncheckedUpdateManyWithoutLessonNestedInput;
+    enrollmentsOnLast?: Prisma.EnrollmentUncheckedUpdateManyWithoutLastLessonNestedInput;
 };
 export type LessonUncheckedUpdateManyWithoutSectionInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -627,9 +713,11 @@ export type LessonUncheckedUpdateManyWithoutSectionInput = {
  */
 export type LessonCountOutputType = {
     progress: number;
+    enrollmentsOnLast: number;
 };
 export type LessonCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     progress?: boolean | LessonCountOutputTypeCountProgressArgs;
+    enrollmentsOnLast?: boolean | LessonCountOutputTypeCountEnrollmentsOnLastArgs;
 };
 /**
  * LessonCountOutputType without action
@@ -646,6 +734,12 @@ export type LessonCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exten
 export type LessonCountOutputTypeCountProgressArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     where?: Prisma.LessonProgressWhereInput;
 };
+/**
+ * LessonCountOutputType without action
+ */
+export type LessonCountOutputTypeCountEnrollmentsOnLastArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.EnrollmentWhereInput;
+};
 export type LessonSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     title?: boolean;
@@ -657,6 +751,7 @@ export type LessonSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     video?: boolean | Prisma.Lesson$videoArgs<ExtArgs>;
     section?: boolean | Prisma.SectionDefaultArgs<ExtArgs>;
     progress?: boolean | Prisma.Lesson$progressArgs<ExtArgs>;
+    enrollmentsOnLast?: boolean | Prisma.Lesson$enrollmentsOnLastArgs<ExtArgs>;
     _count?: boolean | Prisma.LessonCountOutputTypeDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["lesson"]>;
 export type LessonSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -695,6 +790,7 @@ export type LessonInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     video?: boolean | Prisma.Lesson$videoArgs<ExtArgs>;
     section?: boolean | Prisma.SectionDefaultArgs<ExtArgs>;
     progress?: boolean | Prisma.Lesson$progressArgs<ExtArgs>;
+    enrollmentsOnLast?: boolean | Prisma.Lesson$enrollmentsOnLastArgs<ExtArgs>;
     _count?: boolean | Prisma.LessonCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type LessonIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -711,6 +807,7 @@ export type $LessonPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
         video: Prisma.$VideoPayload<ExtArgs> | null;
         section: Prisma.$SectionPayload<ExtArgs>;
         progress: Prisma.$LessonProgressPayload<ExtArgs>[];
+        enrollmentsOnLast: Prisma.$EnrollmentPayload<ExtArgs>[];
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: string;
@@ -1052,6 +1149,7 @@ export interface Prisma__LessonClient<T, Null = never, ExtArgs extends runtime.T
     video<T extends Prisma.Lesson$videoArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lesson$videoArgs<ExtArgs>>): Prisma.Prisma__VideoClient<runtime.Types.Result.GetResult<Prisma.$VideoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>;
     section<T extends Prisma.SectionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SectionDefaultArgs<ExtArgs>>): Prisma.Prisma__SectionClient<runtime.Types.Result.GetResult<Prisma.$SectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
     progress<T extends Prisma.Lesson$progressArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lesson$progressArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LessonProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    enrollmentsOnLast<T extends Prisma.Lesson$enrollmentsOnLastArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lesson$enrollmentsOnLastArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EnrollmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1507,6 +1605,29 @@ export type Lesson$progressArgs<ExtArgs extends runtime.Types.Extensions.Interna
     take?: number;
     skip?: number;
     distinct?: Prisma.LessonProgressScalarFieldEnum | Prisma.LessonProgressScalarFieldEnum[];
+};
+/**
+ * Lesson.enrollmentsOnLast
+ */
+export type Lesson$enrollmentsOnLastArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Enrollment
+     */
+    select?: Prisma.EnrollmentSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the Enrollment
+     */
+    omit?: Prisma.EnrollmentOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.EnrollmentInclude<ExtArgs> | null;
+    where?: Prisma.EnrollmentWhereInput;
+    orderBy?: Prisma.EnrollmentOrderByWithRelationInput | Prisma.EnrollmentOrderByWithRelationInput[];
+    cursor?: Prisma.EnrollmentWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.EnrollmentScalarFieldEnum | Prisma.EnrollmentScalarFieldEnum[];
 };
 /**
  * Lesson without action

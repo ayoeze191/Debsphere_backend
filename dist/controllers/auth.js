@@ -4,7 +4,10 @@ import jwt from "jsonwebtoken";
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MIN_PASSWORD_LENGTH = 8;
 const JWT_SECRET = process.env.JWT_SECRET || "development-secret";
-export const signToken = (user) => jwt.sign({ userId: user.id, role: user.role, email: user.email }, JWT_SECRET, { expiresIn: "7d" });
+export const signToken = (user) => {
+    console.log(user.id);
+    return jwt.sign({ userId: user.id, role: user.role, email: user.email }, JWT_SECRET, { expiresIn: "7d" });
+};
 export const RegisterUser = async (req, res) => {
     const { email, password, firstName, lastName } = req.body;
     if (!email || !password) {
@@ -67,12 +70,31 @@ export const LoginUser = async (req, res) => {
     }
     return res.json({ user, token: signToken(user) });
 };
-export const googleAuthController = async (req, res) => {
-    const user = req.user;
+// export const googleAuthController = async (req: Request, res: Response) => {
+//   const user = req.user;
+//   if (!user) {
+//     return res.status(401).json({ error: "Google authentication failed" });
+//   }
+//   const accessToken = signToken(user);
+//   return res.redirect(
+//     `http://localhost:3000/auth/success?token=${accessToken}`,
+//   );
+// };
+export const getUser = async (req, res) => {
+    const user = await Prisma.user.findUnique({
+        where: {
+            id: req.auth.userId,
+        },
+    });
+    console.log(user);
     if (!user) {
-        return res.status(401).json({ error: "Google authentication failed" });
+        return res.status(404).json({
+            message: "User not found",
+        });
     }
-    const accessToken = signToken(user);
-    return res.redirect(`http://localhost:3000/auth/success?token=${accessToken}`);
+    return res.status(200).json({
+        message: "Success",
+        user,
+    });
 };
 //# sourceMappingURL=auth.js.map

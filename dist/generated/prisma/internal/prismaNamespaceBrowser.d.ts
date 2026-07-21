@@ -37,6 +37,7 @@ export declare const ModelName: {
     readonly Payment: 'Payment';
     readonly Certificate: 'Certificate';
     readonly Review: 'Review';
+    readonly WebhookEvent: 'WebhookEvent';
 };
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
 export declare const TransactionIsolationLevel: {
@@ -69,10 +70,12 @@ export declare const CourseScalarFieldEnum: {
     readonly thumbnail: 'thumbnail';
     readonly price: 'price';
     readonly isPublished: 'isPublished';
+    readonly duration: 'duration';
     readonly categoryId: 'categoryId';
     readonly instructorId: 'instructorId';
     readonly createdAt: 'createdAt';
     readonly updatedAt: 'updatedAt';
+    readonly outcomes: 'outcomes';
 };
 export type CourseScalarFieldEnum = (typeof CourseScalarFieldEnum)[keyof typeof CourseScalarFieldEnum];
 export declare const CategoryScalarFieldEnum: {
@@ -111,6 +114,9 @@ export declare const EnrollmentScalarFieldEnum: {
     readonly id: 'id';
     readonly userId: 'userId';
     readonly courseId: 'courseId';
+    readonly completedLessons: 'completedLessons';
+    readonly totalLessons: 'totalLessons';
+    readonly lastLessonId: 'lastLessonId';
     readonly enrolledAt: 'enrolledAt';
 };
 export type EnrollmentScalarFieldEnum = (typeof EnrollmentScalarFieldEnum)[keyof typeof EnrollmentScalarFieldEnum];
@@ -130,6 +136,9 @@ export declare const PaymentScalarFieldEnum: {
     readonly userId: 'userId';
     readonly courseId: 'courseId';
     readonly createdAt: 'createdAt';
+    readonly email: 'email';
+    readonly phoneNumber: 'phoneNumber';
+    readonly fullName: 'fullName';
 };
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum];
 export declare const CertificateScalarFieldEnum: {
@@ -148,11 +157,24 @@ export declare const ReviewScalarFieldEnum: {
     readonly courseId: 'courseId';
 };
 export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum];
+export declare const WebhookEventScalarFieldEnum: {
+    readonly id: 'id';
+    readonly eventId: 'eventId';
+    readonly eventType: 'eventType';
+    readonly payload: 'payload';
+    readonly processedAt: 'processedAt';
+    readonly createdAt: 'createdAt';
+};
+export type WebhookEventScalarFieldEnum = (typeof WebhookEventScalarFieldEnum)[keyof typeof WebhookEventScalarFieldEnum];
 export declare const SortOrder: {
     readonly asc: 'asc';
     readonly desc: 'desc';
 };
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder];
+export declare const JsonNullValueInput: {
+    readonly JsonNull: import("@prisma/client-runtime-utils").JsonNullClass;
+};
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput];
 export declare const QueryMode: {
     readonly default: 'default';
     readonly insensitive: 'insensitive';
@@ -163,4 +185,10 @@ export declare const NullsOrder: {
     readonly last: 'last';
 };
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder];
+export declare const JsonNullValueFilter: {
+    readonly DbNull: import("@prisma/client-runtime-utils").DbNullClass;
+    readonly JsonNull: import("@prisma/client-runtime-utils").JsonNullClass;
+    readonly AnyNull: import("@prisma/client-runtime-utils").AnyNullClass;
+};
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter];
 //# sourceMappingURL=prismaNamespaceBrowser.d.ts.map

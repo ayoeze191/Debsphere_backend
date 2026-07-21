@@ -7,44 +7,80 @@ import type * as Prisma from "../internal/prismaNamespace.js";
 export type EnrollmentModel = runtime.Types.Result.DefaultSelection<Prisma.$EnrollmentPayload>;
 export type AggregateEnrollment = {
     _count: EnrollmentCountAggregateOutputType | null;
+    _avg: EnrollmentAvgAggregateOutputType | null;
+    _sum: EnrollmentSumAggregateOutputType | null;
     _min: EnrollmentMinAggregateOutputType | null;
     _max: EnrollmentMaxAggregateOutputType | null;
+};
+export type EnrollmentAvgAggregateOutputType = {
+    completedLessons: number | null;
+    totalLessons: number | null;
+};
+export type EnrollmentSumAggregateOutputType = {
+    completedLessons: number | null;
+    totalLessons: number | null;
 };
 export type EnrollmentMinAggregateOutputType = {
     id: string | null;
     userId: string | null;
     courseId: string | null;
+    completedLessons: number | null;
+    totalLessons: number | null;
+    lastLessonId: string | null;
     enrolledAt: Date | null;
 };
 export type EnrollmentMaxAggregateOutputType = {
     id: string | null;
     userId: string | null;
     courseId: string | null;
+    completedLessons: number | null;
+    totalLessons: number | null;
+    lastLessonId: string | null;
     enrolledAt: Date | null;
 };
 export type EnrollmentCountAggregateOutputType = {
     id: number;
     userId: number;
     courseId: number;
+    completedLessons: number;
+    totalLessons: number;
+    lastLessonId: number;
     enrolledAt: number;
     _all: number;
+};
+export type EnrollmentAvgAggregateInputType = {
+    completedLessons?: true;
+    totalLessons?: true;
+};
+export type EnrollmentSumAggregateInputType = {
+    completedLessons?: true;
+    totalLessons?: true;
 };
 export type EnrollmentMinAggregateInputType = {
     id?: true;
     userId?: true;
     courseId?: true;
+    completedLessons?: true;
+    totalLessons?: true;
+    lastLessonId?: true;
     enrolledAt?: true;
 };
 export type EnrollmentMaxAggregateInputType = {
     id?: true;
     userId?: true;
     courseId?: true;
+    completedLessons?: true;
+    totalLessons?: true;
+    lastLessonId?: true;
     enrolledAt?: true;
 };
 export type EnrollmentCountAggregateInputType = {
     id?: true;
     userId?: true;
     courseId?: true;
+    completedLessons?: true;
+    totalLessons?: true;
+    lastLessonId?: true;
     enrolledAt?: true;
     _all?: true;
 };
@@ -86,6 +122,18 @@ export type EnrollmentAggregateArgs<ExtArgs extends runtime.Types.Extensions.Int
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      *
+     * Select which fields to average
+    **/
+    _avg?: EnrollmentAvgAggregateInputType;
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Select which fields to sum
+    **/
+    _sum?: EnrollmentSumAggregateInputType;
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
      * Select which fields to find the minimum value
     **/
     _min?: EnrollmentMinAggregateInputType;
@@ -107,6 +155,8 @@ export type EnrollmentGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inter
     take?: number;
     skip?: number;
     _count?: EnrollmentCountAggregateInputType | true;
+    _avg?: EnrollmentAvgAggregateInputType;
+    _sum?: EnrollmentSumAggregateInputType;
     _min?: EnrollmentMinAggregateInputType;
     _max?: EnrollmentMaxAggregateInputType;
 };
@@ -114,8 +164,13 @@ export type EnrollmentGroupByOutputType = {
     id: string;
     userId: string;
     courseId: string;
+    completedLessons: number | null;
+    totalLessons: number | null;
+    lastLessonId: string | null;
     enrolledAt: Date;
     _count: EnrollmentCountAggregateOutputType | null;
+    _avg: EnrollmentAvgAggregateOutputType | null;
+    _sum: EnrollmentSumAggregateOutputType | null;
     _min: EnrollmentMinAggregateOutputType | null;
     _max: EnrollmentMaxAggregateOutputType | null;
 };
@@ -129,7 +184,11 @@ export type EnrollmentWhereInput = {
     id?: Prisma.StringFilter<"Enrollment"> | string;
     userId?: Prisma.StringFilter<"Enrollment"> | string;
     courseId?: Prisma.StringFilter<"Enrollment"> | string;
+    completedLessons?: Prisma.IntNullableFilter<"Enrollment"> | number | null;
+    totalLessons?: Prisma.IntNullableFilter<"Enrollment"> | number | null;
+    lastLessonId?: Prisma.StringNullableFilter<"Enrollment"> | string | null;
     enrolledAt?: Prisma.DateTimeFilter<"Enrollment"> | Date | string;
+    lastLesson?: Prisma.XOR<Prisma.LessonNullableScalarRelationFilter, Prisma.LessonWhereInput> | null;
     user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
     course?: Prisma.XOR<Prisma.CourseScalarRelationFilter, Prisma.CourseWhereInput>;
 };
@@ -137,7 +196,11 @@ export type EnrollmentOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
     userId?: Prisma.SortOrder;
     courseId?: Prisma.SortOrder;
+    completedLessons?: Prisma.SortOrderInput | Prisma.SortOrder;
+    totalLessons?: Prisma.SortOrderInput | Prisma.SortOrder;
+    lastLessonId?: Prisma.SortOrderInput | Prisma.SortOrder;
     enrolledAt?: Prisma.SortOrder;
+    lastLesson?: Prisma.LessonOrderByWithRelationInput;
     user?: Prisma.UserOrderByWithRelationInput;
     course?: Prisma.CourseOrderByWithRelationInput;
 };
@@ -149,7 +212,11 @@ export type EnrollmentWhereUniqueInput = Prisma.AtLeast<{
     NOT?: Prisma.EnrollmentWhereInput | Prisma.EnrollmentWhereInput[];
     userId?: Prisma.StringFilter<"Enrollment"> | string;
     courseId?: Prisma.StringFilter<"Enrollment"> | string;
+    completedLessons?: Prisma.IntNullableFilter<"Enrollment"> | number | null;
+    totalLessons?: Prisma.IntNullableFilter<"Enrollment"> | number | null;
+    lastLessonId?: Prisma.StringNullableFilter<"Enrollment"> | string | null;
     enrolledAt?: Prisma.DateTimeFilter<"Enrollment"> | Date | string;
+    lastLesson?: Prisma.XOR<Prisma.LessonNullableScalarRelationFilter, Prisma.LessonWhereInput> | null;
     user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
     course?: Prisma.XOR<Prisma.CourseScalarRelationFilter, Prisma.CourseWhereInput>;
 }, "id" | "userId_courseId">;
@@ -157,10 +224,15 @@ export type EnrollmentOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
     userId?: Prisma.SortOrder;
     courseId?: Prisma.SortOrder;
+    completedLessons?: Prisma.SortOrderInput | Prisma.SortOrder;
+    totalLessons?: Prisma.SortOrderInput | Prisma.SortOrder;
+    lastLessonId?: Prisma.SortOrderInput | Prisma.SortOrder;
     enrolledAt?: Prisma.SortOrder;
     _count?: Prisma.EnrollmentCountOrderByAggregateInput;
+    _avg?: Prisma.EnrollmentAvgOrderByAggregateInput;
     _max?: Prisma.EnrollmentMaxOrderByAggregateInput;
     _min?: Prisma.EnrollmentMinOrderByAggregateInput;
+    _sum?: Prisma.EnrollmentSumOrderByAggregateInput;
 };
 export type EnrollmentScalarWhereWithAggregatesInput = {
     AND?: Prisma.EnrollmentScalarWhereWithAggregatesInput | Prisma.EnrollmentScalarWhereWithAggregatesInput[];
@@ -169,11 +241,17 @@ export type EnrollmentScalarWhereWithAggregatesInput = {
     id?: Prisma.StringWithAggregatesFilter<"Enrollment"> | string;
     userId?: Prisma.StringWithAggregatesFilter<"Enrollment"> | string;
     courseId?: Prisma.StringWithAggregatesFilter<"Enrollment"> | string;
+    completedLessons?: Prisma.IntNullableWithAggregatesFilter<"Enrollment"> | number | null;
+    totalLessons?: Prisma.IntNullableWithAggregatesFilter<"Enrollment"> | number | null;
+    lastLessonId?: Prisma.StringNullableWithAggregatesFilter<"Enrollment"> | string | null;
     enrolledAt?: Prisma.DateTimeWithAggregatesFilter<"Enrollment"> | Date | string;
 };
 export type EnrollmentCreateInput = {
     id?: string;
+    completedLessons?: number | null;
+    totalLessons?: number | null;
     enrolledAt?: Date | string;
+    lastLesson?: Prisma.LessonCreateNestedOneWithoutEnrollmentsOnLastInput;
     user: Prisma.UserCreateNestedOneWithoutEnrollmentsInput;
     course: Prisma.CourseCreateNestedOneWithoutEnrollmentsInput;
 };
@@ -181,11 +259,17 @@ export type EnrollmentUncheckedCreateInput = {
     id?: string;
     userId: string;
     courseId: string;
+    completedLessons?: number | null;
+    totalLessons?: number | null;
+    lastLessonId?: string | null;
     enrolledAt?: Date | string;
 };
 export type EnrollmentUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    completedLessons?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    totalLessons?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    lastLesson?: Prisma.LessonUpdateOneWithoutEnrollmentsOnLastNestedInput;
     user?: Prisma.UserUpdateOneRequiredWithoutEnrollmentsNestedInput;
     course?: Prisma.CourseUpdateOneRequiredWithoutEnrollmentsNestedInput;
 };
@@ -193,22 +277,33 @@ export type EnrollmentUncheckedUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     userId?: Prisma.StringFieldUpdateOperationsInput | string;
     courseId?: Prisma.StringFieldUpdateOperationsInput | string;
+    completedLessons?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    totalLessons?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    lastLessonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type EnrollmentCreateManyInput = {
     id?: string;
     userId: string;
     courseId: string;
+    completedLessons?: number | null;
+    totalLessons?: number | null;
+    lastLessonId?: string | null;
     enrolledAt?: Date | string;
 };
 export type EnrollmentUpdateManyMutationInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    completedLessons?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    totalLessons?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type EnrollmentUncheckedUpdateManyInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     userId?: Prisma.StringFieldUpdateOperationsInput | string;
     courseId?: Prisma.StringFieldUpdateOperationsInput | string;
+    completedLessons?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    totalLessons?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    lastLessonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type EnrollmentListRelationFilter = {
@@ -227,19 +322,36 @@ export type EnrollmentCountOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     userId?: Prisma.SortOrder;
     courseId?: Prisma.SortOrder;
+    completedLessons?: Prisma.SortOrder;
+    totalLessons?: Prisma.SortOrder;
+    lastLessonId?: Prisma.SortOrder;
     enrolledAt?: Prisma.SortOrder;
+};
+export type EnrollmentAvgOrderByAggregateInput = {
+    completedLessons?: Prisma.SortOrder;
+    totalLessons?: Prisma.SortOrder;
 };
 export type EnrollmentMaxOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     userId?: Prisma.SortOrder;
     courseId?: Prisma.SortOrder;
+    completedLessons?: Prisma.SortOrder;
+    totalLessons?: Prisma.SortOrder;
+    lastLessonId?: Prisma.SortOrder;
     enrolledAt?: Prisma.SortOrder;
 };
 export type EnrollmentMinOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     userId?: Prisma.SortOrder;
     courseId?: Prisma.SortOrder;
+    completedLessons?: Prisma.SortOrder;
+    totalLessons?: Prisma.SortOrder;
+    lastLessonId?: Prisma.SortOrder;
     enrolledAt?: Prisma.SortOrder;
+};
+export type EnrollmentSumOrderByAggregateInput = {
+    completedLessons?: Prisma.SortOrder;
+    totalLessons?: Prisma.SortOrder;
 };
 export type EnrollmentCreateNestedManyWithoutUserInput = {
     create?: Prisma.XOR<Prisma.EnrollmentCreateWithoutUserInput, Prisma.EnrollmentUncheckedCreateWithoutUserInput> | Prisma.EnrollmentCreateWithoutUserInput[] | Prisma.EnrollmentUncheckedCreateWithoutUserInput[];
@@ -317,14 +429,58 @@ export type EnrollmentUncheckedUpdateManyWithoutCourseNestedInput = {
     updateMany?: Prisma.EnrollmentUpdateManyWithWhereWithoutCourseInput | Prisma.EnrollmentUpdateManyWithWhereWithoutCourseInput[];
     deleteMany?: Prisma.EnrollmentScalarWhereInput | Prisma.EnrollmentScalarWhereInput[];
 };
+export type EnrollmentCreateNestedManyWithoutLastLessonInput = {
+    create?: Prisma.XOR<Prisma.EnrollmentCreateWithoutLastLessonInput, Prisma.EnrollmentUncheckedCreateWithoutLastLessonInput> | Prisma.EnrollmentCreateWithoutLastLessonInput[] | Prisma.EnrollmentUncheckedCreateWithoutLastLessonInput[];
+    connectOrCreate?: Prisma.EnrollmentCreateOrConnectWithoutLastLessonInput | Prisma.EnrollmentCreateOrConnectWithoutLastLessonInput[];
+    createMany?: Prisma.EnrollmentCreateManyLastLessonInputEnvelope;
+    connect?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[];
+};
+export type EnrollmentUncheckedCreateNestedManyWithoutLastLessonInput = {
+    create?: Prisma.XOR<Prisma.EnrollmentCreateWithoutLastLessonInput, Prisma.EnrollmentUncheckedCreateWithoutLastLessonInput> | Prisma.EnrollmentCreateWithoutLastLessonInput[] | Prisma.EnrollmentUncheckedCreateWithoutLastLessonInput[];
+    connectOrCreate?: Prisma.EnrollmentCreateOrConnectWithoutLastLessonInput | Prisma.EnrollmentCreateOrConnectWithoutLastLessonInput[];
+    createMany?: Prisma.EnrollmentCreateManyLastLessonInputEnvelope;
+    connect?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[];
+};
+export type EnrollmentUpdateManyWithoutLastLessonNestedInput = {
+    create?: Prisma.XOR<Prisma.EnrollmentCreateWithoutLastLessonInput, Prisma.EnrollmentUncheckedCreateWithoutLastLessonInput> | Prisma.EnrollmentCreateWithoutLastLessonInput[] | Prisma.EnrollmentUncheckedCreateWithoutLastLessonInput[];
+    connectOrCreate?: Prisma.EnrollmentCreateOrConnectWithoutLastLessonInput | Prisma.EnrollmentCreateOrConnectWithoutLastLessonInput[];
+    upsert?: Prisma.EnrollmentUpsertWithWhereUniqueWithoutLastLessonInput | Prisma.EnrollmentUpsertWithWhereUniqueWithoutLastLessonInput[];
+    createMany?: Prisma.EnrollmentCreateManyLastLessonInputEnvelope;
+    set?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[];
+    disconnect?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[];
+    delete?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[];
+    connect?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[];
+    update?: Prisma.EnrollmentUpdateWithWhereUniqueWithoutLastLessonInput | Prisma.EnrollmentUpdateWithWhereUniqueWithoutLastLessonInput[];
+    updateMany?: Prisma.EnrollmentUpdateManyWithWhereWithoutLastLessonInput | Prisma.EnrollmentUpdateManyWithWhereWithoutLastLessonInput[];
+    deleteMany?: Prisma.EnrollmentScalarWhereInput | Prisma.EnrollmentScalarWhereInput[];
+};
+export type EnrollmentUncheckedUpdateManyWithoutLastLessonNestedInput = {
+    create?: Prisma.XOR<Prisma.EnrollmentCreateWithoutLastLessonInput, Prisma.EnrollmentUncheckedCreateWithoutLastLessonInput> | Prisma.EnrollmentCreateWithoutLastLessonInput[] | Prisma.EnrollmentUncheckedCreateWithoutLastLessonInput[];
+    connectOrCreate?: Prisma.EnrollmentCreateOrConnectWithoutLastLessonInput | Prisma.EnrollmentCreateOrConnectWithoutLastLessonInput[];
+    upsert?: Prisma.EnrollmentUpsertWithWhereUniqueWithoutLastLessonInput | Prisma.EnrollmentUpsertWithWhereUniqueWithoutLastLessonInput[];
+    createMany?: Prisma.EnrollmentCreateManyLastLessonInputEnvelope;
+    set?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[];
+    disconnect?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[];
+    delete?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[];
+    connect?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[];
+    update?: Prisma.EnrollmentUpdateWithWhereUniqueWithoutLastLessonInput | Prisma.EnrollmentUpdateWithWhereUniqueWithoutLastLessonInput[];
+    updateMany?: Prisma.EnrollmentUpdateManyWithWhereWithoutLastLessonInput | Prisma.EnrollmentUpdateManyWithWhereWithoutLastLessonInput[];
+    deleteMany?: Prisma.EnrollmentScalarWhereInput | Prisma.EnrollmentScalarWhereInput[];
+};
 export type EnrollmentCreateWithoutUserInput = {
     id?: string;
+    completedLessons?: number | null;
+    totalLessons?: number | null;
     enrolledAt?: Date | string;
+    lastLesson?: Prisma.LessonCreateNestedOneWithoutEnrollmentsOnLastInput;
     course: Prisma.CourseCreateNestedOneWithoutEnrollmentsInput;
 };
 export type EnrollmentUncheckedCreateWithoutUserInput = {
     id?: string;
     courseId: string;
+    completedLessons?: number | null;
+    totalLessons?: number | null;
+    lastLessonId?: string | null;
     enrolledAt?: Date | string;
 };
 export type EnrollmentCreateOrConnectWithoutUserInput = {
@@ -355,16 +511,25 @@ export type EnrollmentScalarWhereInput = {
     id?: Prisma.StringFilter<"Enrollment"> | string;
     userId?: Prisma.StringFilter<"Enrollment"> | string;
     courseId?: Prisma.StringFilter<"Enrollment"> | string;
+    completedLessons?: Prisma.IntNullableFilter<"Enrollment"> | number | null;
+    totalLessons?: Prisma.IntNullableFilter<"Enrollment"> | number | null;
+    lastLessonId?: Prisma.StringNullableFilter<"Enrollment"> | string | null;
     enrolledAt?: Prisma.DateTimeFilter<"Enrollment"> | Date | string;
 };
 export type EnrollmentCreateWithoutCourseInput = {
     id?: string;
+    completedLessons?: number | null;
+    totalLessons?: number | null;
     enrolledAt?: Date | string;
+    lastLesson?: Prisma.LessonCreateNestedOneWithoutEnrollmentsOnLastInput;
     user: Prisma.UserCreateNestedOneWithoutEnrollmentsInput;
 };
 export type EnrollmentUncheckedCreateWithoutCourseInput = {
     id?: string;
     userId: string;
+    completedLessons?: number | null;
+    totalLessons?: number | null;
+    lastLessonId?: string | null;
     enrolledAt?: Date | string;
 };
 export type EnrollmentCreateOrConnectWithoutCourseInput = {
@@ -388,51 +553,148 @@ export type EnrollmentUpdateManyWithWhereWithoutCourseInput = {
     where: Prisma.EnrollmentScalarWhereInput;
     data: Prisma.XOR<Prisma.EnrollmentUpdateManyMutationInput, Prisma.EnrollmentUncheckedUpdateManyWithoutCourseInput>;
 };
+export type EnrollmentCreateWithoutLastLessonInput = {
+    id?: string;
+    completedLessons?: number | null;
+    totalLessons?: number | null;
+    enrolledAt?: Date | string;
+    user: Prisma.UserCreateNestedOneWithoutEnrollmentsInput;
+    course: Prisma.CourseCreateNestedOneWithoutEnrollmentsInput;
+};
+export type EnrollmentUncheckedCreateWithoutLastLessonInput = {
+    id?: string;
+    userId: string;
+    courseId: string;
+    completedLessons?: number | null;
+    totalLessons?: number | null;
+    enrolledAt?: Date | string;
+};
+export type EnrollmentCreateOrConnectWithoutLastLessonInput = {
+    where: Prisma.EnrollmentWhereUniqueInput;
+    create: Prisma.XOR<Prisma.EnrollmentCreateWithoutLastLessonInput, Prisma.EnrollmentUncheckedCreateWithoutLastLessonInput>;
+};
+export type EnrollmentCreateManyLastLessonInputEnvelope = {
+    data: Prisma.EnrollmentCreateManyLastLessonInput | Prisma.EnrollmentCreateManyLastLessonInput[];
+    skipDuplicates?: boolean;
+};
+export type EnrollmentUpsertWithWhereUniqueWithoutLastLessonInput = {
+    where: Prisma.EnrollmentWhereUniqueInput;
+    update: Prisma.XOR<Prisma.EnrollmentUpdateWithoutLastLessonInput, Prisma.EnrollmentUncheckedUpdateWithoutLastLessonInput>;
+    create: Prisma.XOR<Prisma.EnrollmentCreateWithoutLastLessonInput, Prisma.EnrollmentUncheckedCreateWithoutLastLessonInput>;
+};
+export type EnrollmentUpdateWithWhereUniqueWithoutLastLessonInput = {
+    where: Prisma.EnrollmentWhereUniqueInput;
+    data: Prisma.XOR<Prisma.EnrollmentUpdateWithoutLastLessonInput, Prisma.EnrollmentUncheckedUpdateWithoutLastLessonInput>;
+};
+export type EnrollmentUpdateManyWithWhereWithoutLastLessonInput = {
+    where: Prisma.EnrollmentScalarWhereInput;
+    data: Prisma.XOR<Prisma.EnrollmentUpdateManyMutationInput, Prisma.EnrollmentUncheckedUpdateManyWithoutLastLessonInput>;
+};
 export type EnrollmentCreateManyUserInput = {
     id?: string;
     courseId: string;
+    completedLessons?: number | null;
+    totalLessons?: number | null;
+    lastLessonId?: string | null;
     enrolledAt?: Date | string;
 };
 export type EnrollmentUpdateWithoutUserInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    completedLessons?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    totalLessons?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    lastLesson?: Prisma.LessonUpdateOneWithoutEnrollmentsOnLastNestedInput;
     course?: Prisma.CourseUpdateOneRequiredWithoutEnrollmentsNestedInput;
 };
 export type EnrollmentUncheckedUpdateWithoutUserInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     courseId?: Prisma.StringFieldUpdateOperationsInput | string;
+    completedLessons?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    totalLessons?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    lastLessonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type EnrollmentUncheckedUpdateManyWithoutUserInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     courseId?: Prisma.StringFieldUpdateOperationsInput | string;
+    completedLessons?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    totalLessons?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    lastLessonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type EnrollmentCreateManyCourseInput = {
     id?: string;
     userId: string;
+    completedLessons?: number | null;
+    totalLessons?: number | null;
+    lastLessonId?: string | null;
     enrolledAt?: Date | string;
 };
 export type EnrollmentUpdateWithoutCourseInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    completedLessons?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    totalLessons?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    lastLesson?: Prisma.LessonUpdateOneWithoutEnrollmentsOnLastNestedInput;
     user?: Prisma.UserUpdateOneRequiredWithoutEnrollmentsNestedInput;
 };
 export type EnrollmentUncheckedUpdateWithoutCourseInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     userId?: Prisma.StringFieldUpdateOperationsInput | string;
+    completedLessons?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    totalLessons?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    lastLessonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type EnrollmentUncheckedUpdateManyWithoutCourseInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     userId?: Prisma.StringFieldUpdateOperationsInput | string;
+    completedLessons?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    totalLessons?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    lastLessonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+};
+export type EnrollmentCreateManyLastLessonInput = {
+    id?: string;
+    userId: string;
+    courseId: string;
+    completedLessons?: number | null;
+    totalLessons?: number | null;
+    enrolledAt?: Date | string;
+};
+export type EnrollmentUpdateWithoutLastLessonInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    completedLessons?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    totalLessons?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    user?: Prisma.UserUpdateOneRequiredWithoutEnrollmentsNestedInput;
+    course?: Prisma.CourseUpdateOneRequiredWithoutEnrollmentsNestedInput;
+};
+export type EnrollmentUncheckedUpdateWithoutLastLessonInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    userId?: Prisma.StringFieldUpdateOperationsInput | string;
+    courseId?: Prisma.StringFieldUpdateOperationsInput | string;
+    completedLessons?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    totalLessons?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+};
+export type EnrollmentUncheckedUpdateManyWithoutLastLessonInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    userId?: Prisma.StringFieldUpdateOperationsInput | string;
+    courseId?: Prisma.StringFieldUpdateOperationsInput | string;
+    completedLessons?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    totalLessons?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type EnrollmentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     userId?: boolean;
     courseId?: boolean;
+    completedLessons?: boolean;
+    totalLessons?: boolean;
+    lastLessonId?: boolean;
     enrolledAt?: boolean;
+    lastLesson?: boolean | Prisma.Enrollment$lastLessonArgs<ExtArgs>;
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     course?: boolean | Prisma.CourseDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["enrollment"]>;
@@ -440,7 +702,11 @@ export type EnrollmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
     id?: boolean;
     userId?: boolean;
     courseId?: boolean;
+    completedLessons?: boolean;
+    totalLessons?: boolean;
+    lastLessonId?: boolean;
     enrolledAt?: boolean;
+    lastLesson?: boolean | Prisma.Enrollment$lastLessonArgs<ExtArgs>;
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     course?: boolean | Prisma.CourseDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["enrollment"]>;
@@ -448,7 +714,11 @@ export type EnrollmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
     id?: boolean;
     userId?: boolean;
     courseId?: boolean;
+    completedLessons?: boolean;
+    totalLessons?: boolean;
+    lastLessonId?: boolean;
     enrolledAt?: boolean;
+    lastLesson?: boolean | Prisma.Enrollment$lastLessonArgs<ExtArgs>;
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     course?: boolean | Prisma.CourseDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["enrollment"]>;
@@ -456,24 +726,31 @@ export type EnrollmentSelectScalar = {
     id?: boolean;
     userId?: boolean;
     courseId?: boolean;
+    completedLessons?: boolean;
+    totalLessons?: boolean;
+    lastLessonId?: boolean;
     enrolledAt?: boolean;
 };
-export type EnrollmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "courseId" | "enrolledAt", ExtArgs["result"]["enrollment"]>;
+export type EnrollmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "courseId" | "completedLessons" | "totalLessons" | "lastLessonId" | "enrolledAt", ExtArgs["result"]["enrollment"]>;
 export type EnrollmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    lastLesson?: boolean | Prisma.Enrollment$lastLessonArgs<ExtArgs>;
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     course?: boolean | Prisma.CourseDefaultArgs<ExtArgs>;
 };
 export type EnrollmentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    lastLesson?: boolean | Prisma.Enrollment$lastLessonArgs<ExtArgs>;
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     course?: boolean | Prisma.CourseDefaultArgs<ExtArgs>;
 };
 export type EnrollmentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    lastLesson?: boolean | Prisma.Enrollment$lastLessonArgs<ExtArgs>;
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     course?: boolean | Prisma.CourseDefaultArgs<ExtArgs>;
 };
 export type $EnrollmentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     name: "Enrollment";
     objects: {
+        lastLesson: Prisma.$LessonPayload<ExtArgs> | null;
         user: Prisma.$UserPayload<ExtArgs>;
         course: Prisma.$CoursePayload<ExtArgs>;
     };
@@ -481,6 +758,9 @@ export type $EnrollmentPayload<ExtArgs extends runtime.Types.Extensions.Internal
         id: string;
         userId: string;
         courseId: string;
+        completedLessons: number | null;
+        totalLessons: number | null;
+        lastLessonId: string | null;
         enrolledAt: Date;
     }, ExtArgs["result"]["enrollment"]>;
     composites: {};
@@ -811,6 +1091,7 @@ export interface EnrollmentDelegate<ExtArgs extends runtime.Types.Extensions.Int
  */
 export interface Prisma__EnrollmentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise";
+    lastLesson<T extends Prisma.Enrollment$lastLessonArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Enrollment$lastLessonArgs<ExtArgs>>): Prisma.Prisma__LessonClient<runtime.Types.Result.GetResult<Prisma.$LessonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>;
     user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
     course<T extends Prisma.CourseDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CourseDefaultArgs<ExtArgs>>): Prisma.Prisma__CourseClient<runtime.Types.Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
     /**
@@ -841,6 +1122,9 @@ export interface EnrollmentFieldRefs {
     readonly id: Prisma.FieldRef<"Enrollment", 'String'>;
     readonly userId: Prisma.FieldRef<"Enrollment", 'String'>;
     readonly courseId: Prisma.FieldRef<"Enrollment", 'String'>;
+    readonly completedLessons: Prisma.FieldRef<"Enrollment", 'Int'>;
+    readonly totalLessons: Prisma.FieldRef<"Enrollment", 'Int'>;
+    readonly lastLessonId: Prisma.FieldRef<"Enrollment", 'String'>;
     readonly enrolledAt: Prisma.FieldRef<"Enrollment", 'DateTime'>;
 }
 /**
@@ -1224,6 +1508,24 @@ export type EnrollmentDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.In
      * Limit how many Enrollments to delete.
      */
     limit?: number;
+};
+/**
+ * Enrollment.lastLesson
+ */
+export type Enrollment$lastLessonArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Lesson
+     */
+    select?: Prisma.LessonSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the Lesson
+     */
+    omit?: Prisma.LessonOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.LessonInclude<ExtArgs> | null;
+    where?: Prisma.LessonWhereInput;
 };
 /**
  * Enrollment without action

@@ -9,5 +9,6 @@ export type * from './models/LessonProgress.js';
 export type * from './models/Payment.js';
 export type * from './models/Certificate.js';
 export type * from './models/Review.js';
+export type * from './models/WebhookEvent.js';
 export type * from './commonInputTypes.js';
 //# sourceMappingURL=models.d.ts.map

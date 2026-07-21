@@ -26,6 +26,7 @@ export type CourseMinAggregateOutputType = {
     thumbnail: string | null;
     price: runtime.Decimal | null;
     isPublished: boolean | null;
+    duration: string | null;
     categoryId: string | null;
     instructorId: string | null;
     createdAt: Date | null;
@@ -39,6 +40,7 @@ export type CourseMaxAggregateOutputType = {
     thumbnail: string | null;
     price: runtime.Decimal | null;
     isPublished: boolean | null;
+    duration: string | null;
     categoryId: string | null;
     instructorId: string | null;
     createdAt: Date | null;
@@ -52,10 +54,12 @@ export type CourseCountAggregateOutputType = {
     thumbnail: number;
     price: number;
     isPublished: number;
+    duration: number;
     categoryId: number;
     instructorId: number;
     createdAt: number;
     updatedAt: number;
+    outcomes: number;
     _all: number;
 };
 export type CourseAvgAggregateInputType = {
@@ -72,6 +76,7 @@ export type CourseMinAggregateInputType = {
     thumbnail?: true;
     price?: true;
     isPublished?: true;
+    duration?: true;
     categoryId?: true;
     instructorId?: true;
     createdAt?: true;
@@ -85,6 +90,7 @@ export type CourseMaxAggregateInputType = {
     thumbnail?: true;
     price?: true;
     isPublished?: true;
+    duration?: true;
     categoryId?: true;
     instructorId?: true;
     createdAt?: true;
@@ -98,10 +104,12 @@ export type CourseCountAggregateInputType = {
     thumbnail?: true;
     price?: true;
     isPublished?: true;
+    duration?: true;
     categoryId?: true;
     instructorId?: true;
     createdAt?: true;
     updatedAt?: true;
+    outcomes?: true;
     _all?: true;
 };
 export type CourseAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -188,10 +196,12 @@ export type CourseGroupByOutputType = {
     thumbnail: string;
     price: runtime.Decimal;
     isPublished: boolean;
+    duration: string | null;
     categoryId: string | null;
     instructorId: string;
     createdAt: Date;
     updatedAt: Date;
+    outcomes: string[];
     _count: CourseCountAggregateOutputType | null;
     _avg: CourseAvgAggregateOutputType | null;
     _sum: CourseSumAggregateOutputType | null;
@@ -212,13 +222,16 @@ export type CourseWhereInput = {
     thumbnail?: Prisma.StringFilter<"Course"> | string;
     price?: Prisma.DecimalFilter<"Course"> | runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: Prisma.BoolFilter<"Course"> | boolean;
+    duration?: Prisma.StringNullableFilter<"Course"> | string | null;
     categoryId?: Prisma.StringNullableFilter<"Course"> | string | null;
     instructorId?: Prisma.StringFilter<"Course"> | string;
     createdAt?: Prisma.DateTimeFilter<"Course"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"Course"> | Date | string;
+    outcomes?: Prisma.StringNullableListFilter<"Course">;
     category?: Prisma.XOR<Prisma.CategoryNullableScalarRelationFilter, Prisma.CategoryWhereInput> | null;
     instructor?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
     certificates?: Prisma.CertificateListRelationFilter;
+    payment?: Prisma.PaymentListRelationFilter;
     sections?: Prisma.SectionListRelationFilter;
     enrollments?: Prisma.EnrollmentListRelationFilter;
 };
@@ -230,13 +243,16 @@ export type CourseOrderByWithRelationInput = {
     thumbnail?: Prisma.SortOrder;
     price?: Prisma.SortOrder;
     isPublished?: Prisma.SortOrder;
+    duration?: Prisma.SortOrderInput | Prisma.SortOrder;
     categoryId?: Prisma.SortOrderInput | Prisma.SortOrder;
     instructorId?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
+    outcomes?: Prisma.SortOrder;
     category?: Prisma.CategoryOrderByWithRelationInput;
     instructor?: Prisma.UserOrderByWithRelationInput;
     certificates?: Prisma.CertificateOrderByRelationAggregateInput;
+    payment?: Prisma.PaymentOrderByRelationAggregateInput;
     sections?: Prisma.SectionOrderByRelationAggregateInput;
     enrollments?: Prisma.EnrollmentOrderByRelationAggregateInput;
 };
@@ -251,13 +267,16 @@ export type CourseWhereUniqueInput = Prisma.AtLeast<{
     thumbnail?: Prisma.StringFilter<"Course"> | string;
     price?: Prisma.DecimalFilter<"Course"> | runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: Prisma.BoolFilter<"Course"> | boolean;
+    duration?: Prisma.StringNullableFilter<"Course"> | string | null;
     categoryId?: Prisma.StringNullableFilter<"Course"> | string | null;
     instructorId?: Prisma.StringFilter<"Course"> | string;
     createdAt?: Prisma.DateTimeFilter<"Course"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"Course"> | Date | string;
+    outcomes?: Prisma.StringNullableListFilter<"Course">;
     category?: Prisma.XOR<Prisma.CategoryNullableScalarRelationFilter, Prisma.CategoryWhereInput> | null;
     instructor?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
     certificates?: Prisma.CertificateListRelationFilter;
+    payment?: Prisma.PaymentListRelationFilter;
     sections?: Prisma.SectionListRelationFilter;
     enrollments?: Prisma.EnrollmentListRelationFilter;
 }, "id" | "slug">;
@@ -269,10 +288,12 @@ export type CourseOrderByWithAggregationInput = {
     thumbnail?: Prisma.SortOrder;
     price?: Prisma.SortOrder;
     isPublished?: Prisma.SortOrder;
+    duration?: Prisma.SortOrderInput | Prisma.SortOrder;
     categoryId?: Prisma.SortOrderInput | Prisma.SortOrder;
     instructorId?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
+    outcomes?: Prisma.SortOrder;
     _count?: Prisma.CourseCountOrderByAggregateInput;
     _avg?: Prisma.CourseAvgOrderByAggregateInput;
     _max?: Prisma.CourseMaxOrderByAggregateInput;
@@ -290,10 +311,12 @@ export type CourseScalarWhereWithAggregatesInput = {
     thumbnail?: Prisma.StringWithAggregatesFilter<"Course"> | string;
     price?: Prisma.DecimalWithAggregatesFilter<"Course"> | runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: Prisma.BoolWithAggregatesFilter<"Course"> | boolean;
+    duration?: Prisma.StringNullableWithAggregatesFilter<"Course"> | string | null;
     categoryId?: Prisma.StringNullableWithAggregatesFilter<"Course"> | string | null;
     instructorId?: Prisma.StringWithAggregatesFilter<"Course"> | string;
     createdAt?: Prisma.DateTimeWithAggregatesFilter<"Course"> | Date | string;
     updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Course"> | Date | string;
+    outcomes?: Prisma.StringNullableListFilter<"Course">;
 };
 export type CourseCreateInput = {
     id?: string;
@@ -303,11 +326,14 @@ export type CourseCreateInput = {
     thumbnail: string;
     price: runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: boolean;
+    duration?: string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    outcomes?: Prisma.CourseCreateoutcomesInput | string[];
     category?: Prisma.CategoryCreateNestedOneWithoutCoursesInput;
     instructor: Prisma.UserCreateNestedOneWithoutCoursesInput;
     certificates?: Prisma.CertificateCreateNestedManyWithoutCourseInput;
+    payment?: Prisma.PaymentCreateNestedManyWithoutCourseInput;
     sections?: Prisma.SectionCreateNestedManyWithoutCourseInput;
     enrollments?: Prisma.EnrollmentCreateNestedManyWithoutCourseInput;
 };
@@ -319,11 +345,14 @@ export type CourseUncheckedCreateInput = {
     thumbnail: string;
     price: runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: boolean;
+    duration?: string | null;
     categoryId?: string | null;
     instructorId: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    outcomes?: Prisma.CourseCreateoutcomesInput | string[];
     certificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutCourseInput;
+    payment?: Prisma.PaymentUncheckedCreateNestedManyWithoutCourseInput;
     sections?: Prisma.SectionUncheckedCreateNestedManyWithoutCourseInput;
     enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutCourseInput;
 };
@@ -335,11 +364,14 @@ export type CourseUpdateInput = {
     thumbnail?: Prisma.StringFieldUpdateOperationsInput | string;
     price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    outcomes?: Prisma.CourseUpdateoutcomesInput | string[];
     category?: Prisma.CategoryUpdateOneWithoutCoursesNestedInput;
     instructor?: Prisma.UserUpdateOneRequiredWithoutCoursesNestedInput;
     certificates?: Prisma.CertificateUpdateManyWithoutCourseNestedInput;
+    payment?: Prisma.PaymentUpdateManyWithoutCourseNestedInput;
     sections?: Prisma.SectionUpdateManyWithoutCourseNestedInput;
     enrollments?: Prisma.EnrollmentUpdateManyWithoutCourseNestedInput;
 };
@@ -351,11 +383,14 @@ export type CourseUncheckedUpdateInput = {
     thumbnail?: Prisma.StringFieldUpdateOperationsInput | string;
     price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     instructorId?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    outcomes?: Prisma.CourseUpdateoutcomesInput | string[];
     certificates?: Prisma.CertificateUncheckedUpdateManyWithoutCourseNestedInput;
+    payment?: Prisma.PaymentUncheckedUpdateManyWithoutCourseNestedInput;
     sections?: Prisma.SectionUncheckedUpdateManyWithoutCourseNestedInput;
     enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutCourseNestedInput;
 };
@@ -367,10 +402,12 @@ export type CourseCreateManyInput = {
     thumbnail: string;
     price: runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: boolean;
+    duration?: string | null;
     categoryId?: string | null;
     instructorId: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    outcomes?: Prisma.CourseCreateoutcomesInput | string[];
 };
 export type CourseUpdateManyMutationInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -380,8 +417,10 @@ export type CourseUpdateManyMutationInput = {
     thumbnail?: Prisma.StringFieldUpdateOperationsInput | string;
     price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    outcomes?: Prisma.CourseUpdateoutcomesInput | string[];
 };
 export type CourseUncheckedUpdateManyInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -391,10 +430,12 @@ export type CourseUncheckedUpdateManyInput = {
     thumbnail?: Prisma.StringFieldUpdateOperationsInput | string;
     price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     instructorId?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    outcomes?: Prisma.CourseUpdateoutcomesInput | string[];
 };
 export type CourseListRelationFilter = {
     every?: Prisma.CourseWhereInput;
@@ -404,6 +445,13 @@ export type CourseListRelationFilter = {
 export type CourseOrderByRelationAggregateInput = {
     _count?: Prisma.SortOrder;
 };
+export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null;
+    has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null;
+    hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>;
+    hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>;
+    isEmpty?: boolean;
+};
 export type CourseCountOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     title?: Prisma.SortOrder;
@@ -412,10 +460,12 @@ export type CourseCountOrderByAggregateInput = {
     thumbnail?: Prisma.SortOrder;
     price?: Prisma.SortOrder;
     isPublished?: Prisma.SortOrder;
+    duration?: Prisma.SortOrder;
     categoryId?: Prisma.SortOrder;
     instructorId?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
+    outcomes?: Prisma.SortOrder;
 };
 export type CourseAvgOrderByAggregateInput = {
     price?: Prisma.SortOrder;
@@ -428,6 +478,7 @@ export type CourseMaxOrderByAggregateInput = {
     thumbnail?: Prisma.SortOrder;
     price?: Prisma.SortOrder;
     isPublished?: Prisma.SortOrder;
+    duration?: Prisma.SortOrder;
     categoryId?: Prisma.SortOrder;
     instructorId?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
@@ -441,6 +492,7 @@ export type CourseMinOrderByAggregateInput = {
     thumbnail?: Prisma.SortOrder;
     price?: Prisma.SortOrder;
     isPublished?: Prisma.SortOrder;
+    duration?: Prisma.SortOrder;
     categoryId?: Prisma.SortOrder;
     instructorId?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
@@ -491,6 +543,9 @@ export type CourseUncheckedUpdateManyWithoutInstructorNestedInput = {
     updateMany?: Prisma.CourseUpdateManyWithWhereWithoutInstructorInput | Prisma.CourseUpdateManyWithWhereWithoutInstructorInput[];
     deleteMany?: Prisma.CourseScalarWhereInput | Prisma.CourseScalarWhereInput[];
 };
+export type CourseCreateoutcomesInput = {
+    set: string[];
+};
 export type DecimalFieldUpdateOperationsInput = {
     set?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     increment?: runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -500,6 +555,10 @@ export type DecimalFieldUpdateOperationsInput = {
 };
 export type BoolFieldUpdateOperationsInput = {
     set?: boolean;
+};
+export type CourseUpdateoutcomesInput = {
+    set?: string[];
+    push?: string | string[];
 };
 export type CourseCreateNestedManyWithoutCategoryInput = {
     create?: Prisma.XOR<Prisma.CourseCreateWithoutCategoryInput, Prisma.CourseUncheckedCreateWithoutCategoryInput> | Prisma.CourseCreateWithoutCategoryInput[] | Prisma.CourseUncheckedCreateWithoutCategoryInput[];
@@ -563,6 +622,18 @@ export type CourseUpdateOneRequiredWithoutEnrollmentsNestedInput = {
     connect?: Prisma.CourseWhereUniqueInput;
     update?: Prisma.XOR<Prisma.XOR<Prisma.CourseUpdateToOneWithWhereWithoutEnrollmentsInput, Prisma.CourseUpdateWithoutEnrollmentsInput>, Prisma.CourseUncheckedUpdateWithoutEnrollmentsInput>;
 };
+export type CourseCreateNestedOneWithoutPaymentInput = {
+    create?: Prisma.XOR<Prisma.CourseCreateWithoutPaymentInput, Prisma.CourseUncheckedCreateWithoutPaymentInput>;
+    connectOrCreate?: Prisma.CourseCreateOrConnectWithoutPaymentInput;
+    connect?: Prisma.CourseWhereUniqueInput;
+};
+export type CourseUpdateOneRequiredWithoutPaymentNestedInput = {
+    create?: Prisma.XOR<Prisma.CourseCreateWithoutPaymentInput, Prisma.CourseUncheckedCreateWithoutPaymentInput>;
+    connectOrCreate?: Prisma.CourseCreateOrConnectWithoutPaymentInput;
+    upsert?: Prisma.CourseUpsertWithoutPaymentInput;
+    connect?: Prisma.CourseWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.CourseUpdateToOneWithWhereWithoutPaymentInput, Prisma.CourseUpdateWithoutPaymentInput>, Prisma.CourseUncheckedUpdateWithoutPaymentInput>;
+};
 export type CourseCreateNestedOneWithoutCertificatesInput = {
     create?: Prisma.XOR<Prisma.CourseCreateWithoutCertificatesInput, Prisma.CourseUncheckedCreateWithoutCertificatesInput>;
     connectOrCreate?: Prisma.CourseCreateOrConnectWithoutCertificatesInput;
@@ -583,10 +654,13 @@ export type CourseCreateWithoutInstructorInput = {
     thumbnail: string;
     price: runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: boolean;
+    duration?: string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    outcomes?: Prisma.CourseCreateoutcomesInput | string[];
     category?: Prisma.CategoryCreateNestedOneWithoutCoursesInput;
     certificates?: Prisma.CertificateCreateNestedManyWithoutCourseInput;
+    payment?: Prisma.PaymentCreateNestedManyWithoutCourseInput;
     sections?: Prisma.SectionCreateNestedManyWithoutCourseInput;
     enrollments?: Prisma.EnrollmentCreateNestedManyWithoutCourseInput;
 };
@@ -598,10 +672,13 @@ export type CourseUncheckedCreateWithoutInstructorInput = {
     thumbnail: string;
     price: runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: boolean;
+    duration?: string | null;
     categoryId?: string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    outcomes?: Prisma.CourseCreateoutcomesInput | string[];
     certificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutCourseInput;
+    payment?: Prisma.PaymentUncheckedCreateNestedManyWithoutCourseInput;
     sections?: Prisma.SectionUncheckedCreateNestedManyWithoutCourseInput;
     enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutCourseInput;
 };
@@ -637,10 +714,12 @@ export type CourseScalarWhereInput = {
     thumbnail?: Prisma.StringFilter<"Course"> | string;
     price?: Prisma.DecimalFilter<"Course"> | runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: Prisma.BoolFilter<"Course"> | boolean;
+    duration?: Prisma.StringNullableFilter<"Course"> | string | null;
     categoryId?: Prisma.StringNullableFilter<"Course"> | string | null;
     instructorId?: Prisma.StringFilter<"Course"> | string;
     createdAt?: Prisma.DateTimeFilter<"Course"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"Course"> | Date | string;
+    outcomes?: Prisma.StringNullableListFilter<"Course">;
 };
 export type CourseCreateWithoutCategoryInput = {
     id?: string;
@@ -650,10 +729,13 @@ export type CourseCreateWithoutCategoryInput = {
     thumbnail: string;
     price: runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: boolean;
+    duration?: string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    outcomes?: Prisma.CourseCreateoutcomesInput | string[];
     instructor: Prisma.UserCreateNestedOneWithoutCoursesInput;
     certificates?: Prisma.CertificateCreateNestedManyWithoutCourseInput;
+    payment?: Prisma.PaymentCreateNestedManyWithoutCourseInput;
     sections?: Prisma.SectionCreateNestedManyWithoutCourseInput;
     enrollments?: Prisma.EnrollmentCreateNestedManyWithoutCourseInput;
 };
@@ -665,10 +747,13 @@ export type CourseUncheckedCreateWithoutCategoryInput = {
     thumbnail: string;
     price: runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: boolean;
+    duration?: string | null;
     instructorId: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    outcomes?: Prisma.CourseCreateoutcomesInput | string[];
     certificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutCourseInput;
+    payment?: Prisma.PaymentUncheckedCreateNestedManyWithoutCourseInput;
     sections?: Prisma.SectionUncheckedCreateNestedManyWithoutCourseInput;
     enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutCourseInput;
 };
@@ -701,11 +786,14 @@ export type CourseCreateWithoutSectionsInput = {
     thumbnail: string;
     price: runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: boolean;
+    duration?: string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    outcomes?: Prisma.CourseCreateoutcomesInput | string[];
     category?: Prisma.CategoryCreateNestedOneWithoutCoursesInput;
     instructor: Prisma.UserCreateNestedOneWithoutCoursesInput;
     certificates?: Prisma.CertificateCreateNestedManyWithoutCourseInput;
+    payment?: Prisma.PaymentCreateNestedManyWithoutCourseInput;
     enrollments?: Prisma.EnrollmentCreateNestedManyWithoutCourseInput;
 };
 export type CourseUncheckedCreateWithoutSectionsInput = {
@@ -716,11 +804,14 @@ export type CourseUncheckedCreateWithoutSectionsInput = {
     thumbnail: string;
     price: runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: boolean;
+    duration?: string | null;
     categoryId?: string | null;
     instructorId: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    outcomes?: Prisma.CourseCreateoutcomesInput | string[];
     certificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutCourseInput;
+    payment?: Prisma.PaymentUncheckedCreateNestedManyWithoutCourseInput;
     enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutCourseInput;
 };
 export type CourseCreateOrConnectWithoutSectionsInput = {
@@ -744,11 +835,14 @@ export type CourseUpdateWithoutSectionsInput = {
     thumbnail?: Prisma.StringFieldUpdateOperationsInput | string;
     price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    outcomes?: Prisma.CourseUpdateoutcomesInput | string[];
     category?: Prisma.CategoryUpdateOneWithoutCoursesNestedInput;
     instructor?: Prisma.UserUpdateOneRequiredWithoutCoursesNestedInput;
     certificates?: Prisma.CertificateUpdateManyWithoutCourseNestedInput;
+    payment?: Prisma.PaymentUpdateManyWithoutCourseNestedInput;
     enrollments?: Prisma.EnrollmentUpdateManyWithoutCourseNestedInput;
 };
 export type CourseUncheckedUpdateWithoutSectionsInput = {
@@ -759,11 +853,14 @@ export type CourseUncheckedUpdateWithoutSectionsInput = {
     thumbnail?: Prisma.StringFieldUpdateOperationsInput | string;
     price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     instructorId?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    outcomes?: Prisma.CourseUpdateoutcomesInput | string[];
     certificates?: Prisma.CertificateUncheckedUpdateManyWithoutCourseNestedInput;
+    payment?: Prisma.PaymentUncheckedUpdateManyWithoutCourseNestedInput;
     enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutCourseNestedInput;
 };
 export type CourseCreateWithoutEnrollmentsInput = {
@@ -774,11 +871,14 @@ export type CourseCreateWithoutEnrollmentsInput = {
     thumbnail: string;
     price: runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: boolean;
+    duration?: string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    outcomes?: Prisma.CourseCreateoutcomesInput | string[];
     category?: Prisma.CategoryCreateNestedOneWithoutCoursesInput;
     instructor: Prisma.UserCreateNestedOneWithoutCoursesInput;
     certificates?: Prisma.CertificateCreateNestedManyWithoutCourseInput;
+    payment?: Prisma.PaymentCreateNestedManyWithoutCourseInput;
     sections?: Prisma.SectionCreateNestedManyWithoutCourseInput;
 };
 export type CourseUncheckedCreateWithoutEnrollmentsInput = {
@@ -789,11 +889,14 @@ export type CourseUncheckedCreateWithoutEnrollmentsInput = {
     thumbnail: string;
     price: runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: boolean;
+    duration?: string | null;
     categoryId?: string | null;
     instructorId: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    outcomes?: Prisma.CourseCreateoutcomesInput | string[];
     certificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutCourseInput;
+    payment?: Prisma.PaymentUncheckedCreateNestedManyWithoutCourseInput;
     sections?: Prisma.SectionUncheckedCreateNestedManyWithoutCourseInput;
 };
 export type CourseCreateOrConnectWithoutEnrollmentsInput = {
@@ -817,11 +920,14 @@ export type CourseUpdateWithoutEnrollmentsInput = {
     thumbnail?: Prisma.StringFieldUpdateOperationsInput | string;
     price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    outcomes?: Prisma.CourseUpdateoutcomesInput | string[];
     category?: Prisma.CategoryUpdateOneWithoutCoursesNestedInput;
     instructor?: Prisma.UserUpdateOneRequiredWithoutCoursesNestedInput;
     certificates?: Prisma.CertificateUpdateManyWithoutCourseNestedInput;
+    payment?: Prisma.PaymentUpdateManyWithoutCourseNestedInput;
     sections?: Prisma.SectionUpdateManyWithoutCourseNestedInput;
 };
 export type CourseUncheckedUpdateWithoutEnrollmentsInput = {
@@ -832,12 +938,100 @@ export type CourseUncheckedUpdateWithoutEnrollmentsInput = {
     thumbnail?: Prisma.StringFieldUpdateOperationsInput | string;
     price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     instructorId?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    outcomes?: Prisma.CourseUpdateoutcomesInput | string[];
+    certificates?: Prisma.CertificateUncheckedUpdateManyWithoutCourseNestedInput;
+    payment?: Prisma.PaymentUncheckedUpdateManyWithoutCourseNestedInput;
+    sections?: Prisma.SectionUncheckedUpdateManyWithoutCourseNestedInput;
+};
+export type CourseCreateWithoutPaymentInput = {
+    id?: string;
+    title: string;
+    slug: string;
+    description: string;
+    thumbnail: string;
+    price: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    isPublished?: boolean;
+    duration?: string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    outcomes?: Prisma.CourseCreateoutcomesInput | string[];
+    category?: Prisma.CategoryCreateNestedOneWithoutCoursesInput;
+    instructor: Prisma.UserCreateNestedOneWithoutCoursesInput;
+    certificates?: Prisma.CertificateCreateNestedManyWithoutCourseInput;
+    sections?: Prisma.SectionCreateNestedManyWithoutCourseInput;
+    enrollments?: Prisma.EnrollmentCreateNestedManyWithoutCourseInput;
+};
+export type CourseUncheckedCreateWithoutPaymentInput = {
+    id?: string;
+    title: string;
+    slug: string;
+    description: string;
+    thumbnail: string;
+    price: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    isPublished?: boolean;
+    duration?: string | null;
+    categoryId?: string | null;
+    instructorId: string;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    outcomes?: Prisma.CourseCreateoutcomesInput | string[];
+    certificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutCourseInput;
+    sections?: Prisma.SectionUncheckedCreateNestedManyWithoutCourseInput;
+    enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutCourseInput;
+};
+export type CourseCreateOrConnectWithoutPaymentInput = {
+    where: Prisma.CourseWhereUniqueInput;
+    create: Prisma.XOR<Prisma.CourseCreateWithoutPaymentInput, Prisma.CourseUncheckedCreateWithoutPaymentInput>;
+};
+export type CourseUpsertWithoutPaymentInput = {
+    update: Prisma.XOR<Prisma.CourseUpdateWithoutPaymentInput, Prisma.CourseUncheckedUpdateWithoutPaymentInput>;
+    create: Prisma.XOR<Prisma.CourseCreateWithoutPaymentInput, Prisma.CourseUncheckedCreateWithoutPaymentInput>;
+    where?: Prisma.CourseWhereInput;
+};
+export type CourseUpdateToOneWithWhereWithoutPaymentInput = {
+    where?: Prisma.CourseWhereInput;
+    data: Prisma.XOR<Prisma.CourseUpdateWithoutPaymentInput, Prisma.CourseUncheckedUpdateWithoutPaymentInput>;
+};
+export type CourseUpdateWithoutPaymentInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
+    description?: Prisma.StringFieldUpdateOperationsInput | string;
+    thumbnail?: Prisma.StringFieldUpdateOperationsInput | string;
+    price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    outcomes?: Prisma.CourseUpdateoutcomesInput | string[];
+    category?: Prisma.CategoryUpdateOneWithoutCoursesNestedInput;
+    instructor?: Prisma.UserUpdateOneRequiredWithoutCoursesNestedInput;
+    certificates?: Prisma.CertificateUpdateManyWithoutCourseNestedInput;
+    sections?: Prisma.SectionUpdateManyWithoutCourseNestedInput;
+    enrollments?: Prisma.EnrollmentUpdateManyWithoutCourseNestedInput;
+};
+export type CourseUncheckedUpdateWithoutPaymentInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
+    description?: Prisma.StringFieldUpdateOperationsInput | string;
+    thumbnail?: Prisma.StringFieldUpdateOperationsInput | string;
+    price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    instructorId?: Prisma.StringFieldUpdateOperationsInput | string;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    outcomes?: Prisma.CourseUpdateoutcomesInput | string[];
     certificates?: Prisma.CertificateUncheckedUpdateManyWithoutCourseNestedInput;
     sections?: Prisma.SectionUncheckedUpdateManyWithoutCourseNestedInput;
+    enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutCourseNestedInput;
 };
 export type CourseCreateWithoutCertificatesInput = {
     id?: string;
@@ -847,10 +1041,13 @@ export type CourseCreateWithoutCertificatesInput = {
     thumbnail: string;
     price: runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: boolean;
+    duration?: string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    outcomes?: Prisma.CourseCreateoutcomesInput | string[];
     category?: Prisma.CategoryCreateNestedOneWithoutCoursesInput;
     instructor: Prisma.UserCreateNestedOneWithoutCoursesInput;
+    payment?: Prisma.PaymentCreateNestedManyWithoutCourseInput;
     sections?: Prisma.SectionCreateNestedManyWithoutCourseInput;
     enrollments?: Prisma.EnrollmentCreateNestedManyWithoutCourseInput;
 };
@@ -862,10 +1059,13 @@ export type CourseUncheckedCreateWithoutCertificatesInput = {
     thumbnail: string;
     price: runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: boolean;
+    duration?: string | null;
     categoryId?: string | null;
     instructorId: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    outcomes?: Prisma.CourseCreateoutcomesInput | string[];
+    payment?: Prisma.PaymentUncheckedCreateNestedManyWithoutCourseInput;
     sections?: Prisma.SectionUncheckedCreateNestedManyWithoutCourseInput;
     enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutCourseInput;
 };
@@ -890,10 +1090,13 @@ export type CourseUpdateWithoutCertificatesInput = {
     thumbnail?: Prisma.StringFieldUpdateOperationsInput | string;
     price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    outcomes?: Prisma.CourseUpdateoutcomesInput | string[];
     category?: Prisma.CategoryUpdateOneWithoutCoursesNestedInput;
     instructor?: Prisma.UserUpdateOneRequiredWithoutCoursesNestedInput;
+    payment?: Prisma.PaymentUpdateManyWithoutCourseNestedInput;
     sections?: Prisma.SectionUpdateManyWithoutCourseNestedInput;
     enrollments?: Prisma.EnrollmentUpdateManyWithoutCourseNestedInput;
 };
@@ -905,10 +1108,13 @@ export type CourseUncheckedUpdateWithoutCertificatesInput = {
     thumbnail?: Prisma.StringFieldUpdateOperationsInput | string;
     price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     instructorId?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    outcomes?: Prisma.CourseUpdateoutcomesInput | string[];
+    payment?: Prisma.PaymentUncheckedUpdateManyWithoutCourseNestedInput;
     sections?: Prisma.SectionUncheckedUpdateManyWithoutCourseNestedInput;
     enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutCourseNestedInput;
 };
@@ -920,9 +1126,11 @@ export type CourseCreateManyInstructorInput = {
     thumbnail: string;
     price: runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: boolean;
+    duration?: string | null;
     categoryId?: string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    outcomes?: Prisma.CourseCreateoutcomesInput | string[];
 };
 export type CourseUpdateWithoutInstructorInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -932,10 +1140,13 @@ export type CourseUpdateWithoutInstructorInput = {
     thumbnail?: Prisma.StringFieldUpdateOperationsInput | string;
     price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    outcomes?: Prisma.CourseUpdateoutcomesInput | string[];
     category?: Prisma.CategoryUpdateOneWithoutCoursesNestedInput;
     certificates?: Prisma.CertificateUpdateManyWithoutCourseNestedInput;
+    payment?: Prisma.PaymentUpdateManyWithoutCourseNestedInput;
     sections?: Prisma.SectionUpdateManyWithoutCourseNestedInput;
     enrollments?: Prisma.EnrollmentUpdateManyWithoutCourseNestedInput;
 };
@@ -947,10 +1158,13 @@ export type CourseUncheckedUpdateWithoutInstructorInput = {
     thumbnail?: Prisma.StringFieldUpdateOperationsInput | string;
     price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    outcomes?: Prisma.CourseUpdateoutcomesInput | string[];
     certificates?: Prisma.CertificateUncheckedUpdateManyWithoutCourseNestedInput;
+    payment?: Prisma.PaymentUncheckedUpdateManyWithoutCourseNestedInput;
     sections?: Prisma.SectionUncheckedUpdateManyWithoutCourseNestedInput;
     enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutCourseNestedInput;
 };
@@ -962,9 +1176,11 @@ export type CourseUncheckedUpdateManyWithoutInstructorInput = {
     thumbnail?: Prisma.StringFieldUpdateOperationsInput | string;
     price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    outcomes?: Prisma.CourseUpdateoutcomesInput | string[];
 };
 export type CourseCreateManyCategoryInput = {
     id?: string;
@@ -974,9 +1190,11 @@ export type CourseCreateManyCategoryInput = {
     thumbnail: string;
     price: runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: boolean;
+    duration?: string | null;
     instructorId: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    outcomes?: Prisma.CourseCreateoutcomesInput | string[];
 };
 export type CourseUpdateWithoutCategoryInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -986,10 +1204,13 @@ export type CourseUpdateWithoutCategoryInput = {
     thumbnail?: Prisma.StringFieldUpdateOperationsInput | string;
     price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    outcomes?: Prisma.CourseUpdateoutcomesInput | string[];
     instructor?: Prisma.UserUpdateOneRequiredWithoutCoursesNestedInput;
     certificates?: Prisma.CertificateUpdateManyWithoutCourseNestedInput;
+    payment?: Prisma.PaymentUpdateManyWithoutCourseNestedInput;
     sections?: Prisma.SectionUpdateManyWithoutCourseNestedInput;
     enrollments?: Prisma.EnrollmentUpdateManyWithoutCourseNestedInput;
 };
@@ -1001,10 +1222,13 @@ export type CourseUncheckedUpdateWithoutCategoryInput = {
     thumbnail?: Prisma.StringFieldUpdateOperationsInput | string;
     price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     instructorId?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    outcomes?: Prisma.CourseUpdateoutcomesInput | string[];
     certificates?: Prisma.CertificateUncheckedUpdateManyWithoutCourseNestedInput;
+    payment?: Prisma.PaymentUncheckedUpdateManyWithoutCourseNestedInput;
     sections?: Prisma.SectionUncheckedUpdateManyWithoutCourseNestedInput;
     enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutCourseNestedInput;
 };
@@ -1016,20 +1240,24 @@ export type CourseUncheckedUpdateManyWithoutCategoryInput = {
     thumbnail?: Prisma.StringFieldUpdateOperationsInput | string;
     price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     instructorId?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    outcomes?: Prisma.CourseUpdateoutcomesInput | string[];
 };
 /**
  * Count Type CourseCountOutputType
  */
 export type CourseCountOutputType = {
     certificates: number;
+    payment: number;
     sections: number;
     enrollments: number;
 };
 export type CourseCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     certificates?: boolean | CourseCountOutputTypeCountCertificatesArgs;
+    payment?: boolean | CourseCountOutputTypeCountPaymentArgs;
     sections?: boolean | CourseCountOutputTypeCountSectionsArgs;
     enrollments?: boolean | CourseCountOutputTypeCountEnrollmentsArgs;
 };
@@ -1051,6 +1279,12 @@ export type CourseCountOutputTypeCountCertificatesArgs<ExtArgs extends runtime.T
 /**
  * CourseCountOutputType without action
  */
+export type CourseCountOutputTypeCountPaymentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.PaymentWhereInput;
+};
+/**
+ * CourseCountOutputType without action
+ */
 export type CourseCountOutputTypeCountSectionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     where?: Prisma.SectionWhereInput;
 };
@@ -1068,13 +1302,16 @@ export type CourseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     thumbnail?: boolean;
     price?: boolean;
     isPublished?: boolean;
+    duration?: boolean;
     categoryId?: boolean;
     instructorId?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
+    outcomes?: boolean;
     category?: boolean | Prisma.Course$categoryArgs<ExtArgs>;
     instructor?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     certificates?: boolean | Prisma.Course$certificatesArgs<ExtArgs>;
+    payment?: boolean | Prisma.Course$paymentArgs<ExtArgs>;
     sections?: boolean | Prisma.Course$sectionsArgs<ExtArgs>;
     enrollments?: boolean | Prisma.Course$enrollmentsArgs<ExtArgs>;
     _count?: boolean | Prisma.CourseCountOutputTypeDefaultArgs<ExtArgs>;
@@ -1087,10 +1324,12 @@ export type CourseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
     thumbnail?: boolean;
     price?: boolean;
     isPublished?: boolean;
+    duration?: boolean;
     categoryId?: boolean;
     instructorId?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
+    outcomes?: boolean;
     category?: boolean | Prisma.Course$categoryArgs<ExtArgs>;
     instructor?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["course"]>;
@@ -1102,10 +1341,12 @@ export type CourseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
     thumbnail?: boolean;
     price?: boolean;
     isPublished?: boolean;
+    duration?: boolean;
     categoryId?: boolean;
     instructorId?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
+    outcomes?: boolean;
     category?: boolean | Prisma.Course$categoryArgs<ExtArgs>;
     instructor?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["course"]>;
@@ -1117,16 +1358,19 @@ export type CourseSelectScalar = {
     thumbnail?: boolean;
     price?: boolean;
     isPublished?: boolean;
+    duration?: boolean;
     categoryId?: boolean;
     instructorId?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
+    outcomes?: boolean;
 };
-export type CourseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "description" | "thumbnail" | "price" | "isPublished" | "categoryId" | "instructorId" | "createdAt" | "updatedAt", ExtArgs["result"]["course"]>;
+export type CourseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "description" | "thumbnail" | "price" | "isPublished" | "duration" | "categoryId" | "instructorId" | "createdAt" | "updatedAt" | "outcomes", ExtArgs["result"]["course"]>;
 export type CourseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     category?: boolean | Prisma.Course$categoryArgs<ExtArgs>;
     instructor?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     certificates?: boolean | Prisma.Course$certificatesArgs<ExtArgs>;
+    payment?: boolean | Prisma.Course$paymentArgs<ExtArgs>;
     sections?: boolean | Prisma.Course$sectionsArgs<ExtArgs>;
     enrollments?: boolean | Prisma.Course$enrollmentsArgs<ExtArgs>;
     _count?: boolean | Prisma.CourseCountOutputTypeDefaultArgs<ExtArgs>;
@@ -1145,6 +1389,7 @@ export type $CoursePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
         category: Prisma.$CategoryPayload<ExtArgs> | null;
         instructor: Prisma.$UserPayload<ExtArgs>;
         certificates: Prisma.$CertificatePayload<ExtArgs>[];
+        payment: Prisma.$PaymentPayload<ExtArgs>[];
         sections: Prisma.$SectionPayload<ExtArgs>[];
         enrollments: Prisma.$EnrollmentPayload<ExtArgs>[];
     };
@@ -1156,10 +1401,12 @@ export type $CoursePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
         thumbnail: string;
         price: runtime.Decimal;
         isPublished: boolean;
+        duration: string | null;
         categoryId: string | null;
         instructorId: string;
         createdAt: Date;
         updatedAt: Date;
+        outcomes: string[];
     }, ExtArgs["result"]["course"]>;
     composites: {};
 };
@@ -1492,6 +1739,7 @@ export interface Prisma__CourseClient<T, Null = never, ExtArgs extends runtime.T
     category<T extends Prisma.Course$categoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Course$categoryArgs<ExtArgs>>): Prisma.Prisma__CategoryClient<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>;
     instructor<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
     certificates<T extends Prisma.Course$certificatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Course$certificatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CertificatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    payment<T extends Prisma.Course$paymentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Course$paymentArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     sections<T extends Prisma.Course$sectionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Course$sectionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     enrollments<T extends Prisma.Course$enrollmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Course$enrollmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EnrollmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     /**
@@ -1526,10 +1774,12 @@ export interface CourseFieldRefs {
     readonly thumbnail: Prisma.FieldRef<"Course", 'String'>;
     readonly price: Prisma.FieldRef<"Course", 'Decimal'>;
     readonly isPublished: Prisma.FieldRef<"Course", 'Boolean'>;
+    readonly duration: Prisma.FieldRef<"Course", 'String'>;
     readonly categoryId: Prisma.FieldRef<"Course", 'String'>;
     readonly instructorId: Prisma.FieldRef<"Course", 'String'>;
     readonly createdAt: Prisma.FieldRef<"Course", 'DateTime'>;
     readonly updatedAt: Prisma.FieldRef<"Course", 'DateTime'>;
+    readonly outcomes: Prisma.FieldRef<"Course", 'String[]'>;
 }
 /**
  * Course findUnique
@@ -1953,6 +2203,29 @@ export type Course$certificatesArgs<ExtArgs extends runtime.Types.Extensions.Int
     take?: number;
     skip?: number;
     distinct?: Prisma.CertificateScalarFieldEnum | Prisma.CertificateScalarFieldEnum[];
+};
+/**
+ * Course.payment
+ */
+export type Course$paymentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: Prisma.PaymentSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the Payment
+     */
+    omit?: Prisma.PaymentOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.PaymentInclude<ExtArgs> | null;
+    where?: Prisma.PaymentWhereInput;
+    orderBy?: Prisma.PaymentOrderByWithRelationInput | Prisma.PaymentOrderByWithRelationInput[];
+    cursor?: Prisma.PaymentWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.PaymentScalarFieldEnum | Prisma.PaymentScalarFieldEnum[];
 };
 /**
  * Course.sections
