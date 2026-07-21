@@ -32,7 +32,7 @@ router.get(
     }
     const token = signToken(user);
 
-    res.redirect(`http://localhost:3000/auth/success?token=${token}`);
+    res.redirect(`${process.env.FRONTEND_URL}/auth/success?token=${token}`);
   },
 );
 router.get("/user", isAuthenticated, getUser);
