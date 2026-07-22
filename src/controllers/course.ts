@@ -31,7 +31,15 @@ export const GetCourse = async (req: Request, res: Response) => {
         },
       },
       category: true,
-      instructor: true,
+      instructor: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          profileImage: true,
+          avatar: true,
+        },
+      },
     },
   });
 

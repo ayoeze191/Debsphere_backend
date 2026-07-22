@@ -1,11 +1,16 @@
 import { Prisma } from "../prisma/client.js";
-import type { User } from "../generated/prisma/client.js";
+import { UserRole, type User } from "../generated/prisma/client.js";
 import type { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MIN_PASSWORD_LENGTH = 8;
 const JWT_SECRET = process.env.JWT_SECRET || "development-secret";
+
+const withoutPassword = <T extends { password: string }>(user: T) => {
+  const { password: _password, ...safeUser } = user;
+  return safeUser;
+};
 
 export const signToken = (user: User) => {
   console.log(user.id);
@@ -18,7 +23,8 @@ export const signToken = (user: User) => {
 };
 
 export const RegisterUser = async (req: Request, res: Response) => {
-  const { email, password, firstName, lastName } = req.body;
+  const { email, password, firstName, lastName, role = UserRole.STUDENT } =
+    req.body;
   if (!email || !password) {
     return res.status(400).json({ error: "Email and password are required " });
   }
@@ -33,6 +39,10 @@ export const RegisterUser = async (req: Request, res: Response) => {
     });
   }
 
+  if (!Object.values(UserRole).includes(role)) {
+    return res.status(400).json({ error: "Invalid user role" });
+  }
+
   const passwordHash = await bcrypt.hash(password, 10);
 
   try {
@@ -42,9 +52,13 @@ export const RegisterUser = async (req: Request, res: Response) => {
         password: passwordHash,
         firstName: firstName.trim() || null,
         lastName: lastName.trim() || null,
+        role,
       },
     });
-    res.status(201).json({ user: User, message: "User Successfully" });
+    res.status(201).json({
+      user: withoutPassword(User),
+      message: "User Successfully",
+    });
   } catch (err) {
     if (
       typeof err === "object" &&
@@ -85,7 +99,7 @@ export const LoginUser = async (req: Request, res: Response) => {
     return res.status(401).json({ error: "Invalid credentials" });
   }
 
-  return res.json({ user, token: signToken(user) });
+  return res.json({ user: withoutPassword(user), token: signToken(user) });
 };
 
 // export const googleAuthController = async (req: Request, res: Response) => {
@@ -118,6 +132,6 @@ export const getUser = async (req: Request, res: Response) => {
 
   return res.status(200).json({
     message: "Success",
-    user,
+    user: withoutPassword(user),
   });
 };

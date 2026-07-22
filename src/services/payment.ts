@@ -68,11 +68,17 @@ class PaymentService {
       });
 
       if (!alreadyEnrolled) {
+        const firstLessonId = payment.course.sections.flatMap((section) =>
+          section.lessons.map((lesson) => lesson.id),
+        )[0];
+
         await tx.enrollment.create({
           data: {
             userId: payment.userId,
             courseId: payment.courseId,
-            lastLessonId: payment.course.sections[0]!.lessons[0]!.id,
+            // Courses without lessons can still be purchased; progress starts
+            // with a null lastLessonId until content is added.
+            ...(firstLessonId ? { lastLessonId: firstLessonId } : {}),
           },
         });
       }

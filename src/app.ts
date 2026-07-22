@@ -5,6 +5,7 @@ import morgan from "morgan";
 import passport from "passport";
 import route from "./routes/index.js";
 import "./config/passport.js";
+import { errorHandler, notFoundHandler } from "./middleware/errors.js";
 
 const app = express();
 
@@ -42,5 +43,7 @@ app.use(express.json());
 app.use(passport.initialize());
 
 app.use("/api", route);
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 export default app;

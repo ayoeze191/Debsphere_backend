@@ -19,5 +19,17 @@ export const verifyPaystackWebhook = (
     });
   }
 
+  try {
+    // The webhook route uses express.raw() so the signature is calculated from
+    // Paystack's exact bytes. Convert those bytes only after verification so
+    // downstream handlers receive the event object they expect.
+    req.body = JSON.parse(req.body.toString("utf8"));
+  } catch {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid webhook payload",
+    });
+  }
+
   next();
 };
