@@ -1,6 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
 import nodemailer from "nodemailer";
+import { email } from "zod";
 
 const EMAIL_TEMPLATE_PATH = path.resolve(process.cwd(), "emails", "dist");
 
@@ -86,6 +87,44 @@ class EmailService {
     });
 
     return this.sendMail(email, "Reset your password", html);
+  }
+  async PaymentReceivedEmail(
+    email: string,
+    course: {
+      title: string;
+      slug: string;
+      category?: string | null;
+      thumbnail?: string | null;
+      lessonCount: number;
+    },
+    firstName: string,
+    payment: {
+      amount: number;
+      reference: string;
+      paidAt: Date;
+    },
+  ) {
+    const courseUrl = `${process.env.FRONTEND_URL}/courses/${course.slug}`;
+    const myLearningUrl = `${process.env.FRONTEND_URL}/learn`;
+
+    const html = await this.loadTemplate("payment-received", {
+      firstname: firstName,
+      coursetitle: course.title,
+      coursecategory: course.category ?? "Course",
+      coursethumbnail: course.thumbnail ?? "",
+      lessoncount: String(course.lessonCount),
+      amount: payment.amount.toLocaleString("en-NG"),
+      reference: payment.reference,
+      paymentdate: payment.paidAt.toLocaleDateString("en-NG", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }),
+      courseurl: courseUrl,
+      mylearningurl: myLearningUrl,
+    });
+
+    return this.sendMail(email, "Payment Received", html);
   }
 }
 
