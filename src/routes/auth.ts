@@ -4,6 +4,7 @@ import {
   // googleAuthController,
   LoginUser,
   RegisterUser,
+  verifyUserAccount,
 } from "../controllers/auth.js";
 import passport from "passport";
 import { signToken } from "../controllers/auth.js";
@@ -11,6 +12,7 @@ import { isAuthenticated } from "../middleware/auth.js";
 const router = Router();
 
 router.post("/register", RegisterUser);
+// router.post("/verify_user_account",)
 router.post("/login", LoginUser);
 
 router.get(
@@ -20,6 +22,7 @@ router.get(
     session: false,
   }),
 );
+router.get("/verify-email", verifyUserAccount);
 router.get(
   "/google/callback",
   passport.authenticate("google", {
@@ -31,7 +34,6 @@ router.get(
       return;
     }
     const token = signToken(user);
-
     res.redirect(`${process.env.FRONTEND_URL}/auth/success?token=${token}`);
   },
 );

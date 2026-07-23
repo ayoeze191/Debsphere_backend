@@ -49,7 +49,23 @@ model User {
   progress     LessonProgress[]
   certificates Certificate[]
   courses      Course[]
+  isVerfied    Boolean @default(false)
+  verificationTokens VerificationToken[]
 }
+
+
+model VerificationToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  expiresAt DateTime
+
+  userId    String
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+}
+
+
 
 model Course {
   id           String  @id @default(cuid())

@@ -37,6 +37,7 @@ passport.use(
               lastName: profile.name?.familyName ?? "",
               ...(avatar ? { avatar } : {}),
               provider: "GOOGLE",
+              isVerfied: true,
             },
           });
         }
