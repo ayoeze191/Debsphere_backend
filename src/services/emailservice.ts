@@ -1,20 +1,12 @@
 import fs from "fs/promises";
 import path from "path";
-import nodemailer from "nodemailer";
-import { email } from "zod";
+import { Resend } from "resend";
+import type { CreateEmailOptions } from "resend";
 
 const EMAIL_TEMPLATE_PATH = path.resolve(process.cwd(), "emails", "dist");
 
 class EmailService {
-  private transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT),
-    secure: false,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-  });
+  private resend = new Resend(process.env.RESEND_API_KEY);
 
   /**
    * Load an HTML template and replace placeholders.
@@ -38,12 +30,14 @@ class EmailService {
    * Generic email sender.
    */
   private async sendMail(to: string, subject: string, html: string) {
-    return this.transporter.sendMail({
-      from: process.env.MAIL_FROM,
+    const payload: CreateEmailOptions = {
+      from: process.env.MAIL_FROM!,
       to,
       subject,
       html,
-    });
+    };
+    const response = await this.resend.emails.send(payload);
+    return;
   }
 
   /**
@@ -88,6 +82,8 @@ class EmailService {
 
     return this.sendMail(email, "Reset your password", html);
   }
+
+  // payment Received email
   async PaymentReceivedEmail(
     email: string,
     course: {
@@ -105,7 +101,7 @@ class EmailService {
     },
   ) {
     const courseUrl = `${process.env.FRONTEND_URL}/courses/${course.slug}`;
-    const myLearningUrl = `${process.env.FRONTEND_URL}/learn`;
+    const myLearningUrl = `${process.env.FRONTEND_URL}/dashboard/learn`;
 
     const html = await this.loadTemplate("payment-received", {
       firstname: firstName,

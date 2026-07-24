@@ -60,7 +60,7 @@
 
         <Spacer class="h-8" />
 
-        <Button
+        <a
           href="__VERIFICATIONURL__"
           class="bg-[#052073] px-8 py-4 text-base font-semibold text-white"
           style="
@@ -73,7 +73,7 @@
           "
         >
           Verify Email Address
-        </Button>
+        </a>
 
         <Spacer class="h-8" />
 
