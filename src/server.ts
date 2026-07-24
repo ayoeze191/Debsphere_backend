@@ -1,4 +1,5 @@
 import "dotenv/config";
+import "./worker.js";
 
 import app from "./app.js";
 
