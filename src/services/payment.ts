@@ -36,7 +36,6 @@ class PaymentService {
           reference,
         },
         include: {
-          user: true,
           course: {
             include: {
               category: true,
