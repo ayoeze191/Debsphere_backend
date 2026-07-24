@@ -139,28 +139,14 @@ class PaymentController {
           await tx.enrollment.create({
             data: { userId: payment.userId, courseId: payment.courseId },
           });
-          const course = await Prisma.course.findUnique({
+
+          const lessonCount = await Prisma.lesson.count({
             where: {
-              id: payment.courseId,
-            },
-            include: {
-              sections: {
-                select: {
-                  _count: {
-                    select: {
-                      lessons: true,
-                    },
-                  },
-                },
+              section: {
+                courseId: payment.courseId,
               },
             },
           });
-
-          const lessonCount =
-            course?.sections.reduce(
-              (total, section) => total + section._count.lessons,
-              0,
-            ) ?? 0;
           emailQueue.add("send-payment-received", {
             email: req.auth?.email,
             course: { ...payment.course, lessoncount: lessonCount },
