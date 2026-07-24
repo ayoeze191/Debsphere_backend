@@ -3,7 +3,6 @@ import { verifyPaystackWebhook } from "../middleware/payments.js";
 import PaymentController from "../controllers/payments.js";
 import { isAuthenticated } from "../middleware/auth.js";
 const router = Router();
-
 router.post(
   "/webhook",
 

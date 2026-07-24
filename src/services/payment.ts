@@ -7,7 +7,7 @@ class PaymentService {
     if (event.event !== "charge.success") {
       return;
     }
-    const eventId = event.id;
+    const eventId = event.data.id;
     const exists = await Prisma.webhookEvent.findUnique({
       where: {
         eventId,
