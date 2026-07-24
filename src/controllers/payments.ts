@@ -1,6 +1,8 @@
 import type { Request, Response } from "express";
 import PaymentService from "./../services/payment.js";
 import { Prisma } from "../prisma/client.js";
+import { emailQueue } from "../queue/email.queue.js";
+
 import { success } from "zod";
 type Params = {
   reference: string;
@@ -136,6 +138,34 @@ class PaymentController {
         if (!alreadyEnrolled) {
           await tx.enrollment.create({
             data: { userId: payment.userId, courseId: payment.courseId },
+          });
+          const course = await Prisma.course.findUnique({
+            where: {
+              id: payment.courseId,
+            },
+            include: {
+              sections: {
+                select: {
+                  _count: {
+                    select: {
+                      lessons: true,
+                    },
+                  },
+                },
+              },
+            },
+          });
+
+          const lessonCount =
+            course?.sections.reduce(
+              (total, section) => total + section._count.lessons,
+              0,
+            ) ?? 0;
+          emailQueue.add("send-payment-received", {
+            email: req.auth?.email,
+            course: { ...payment.course, lessoncount: lessonCount },
+            firstName: payment.fullName,
+            payment: payment,
           });
         }
       });

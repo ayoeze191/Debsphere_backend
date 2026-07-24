@@ -1,6 +1,7 @@
 import { Prisma } from "../prisma/client.js";
 import axios from "axios";
 import emailservice from "./emailservice.js";
+import { emailQueue } from "../queue/email.queue.js";
 class PaymentService {
   static async handleWebhook(event: any) {
     if (event.event !== "charge.success") {
@@ -119,12 +120,18 @@ class PaymentService {
 
     if (result.shouldSendEmail) {
       try {
-        await emailservice.PaymentReceivedEmail(
-          result!.emailData!.email,
-          result!.emailData!.course,
-          result!.emailData!.firstName,
-          result!.emailData!.payment,
-        );
+        emailQueue.add("send-payment-received", {
+          email: result!.emailData!.email,
+          course: result!.emailData!.course,
+          firstName: result!.emailData!.firstName,
+          payment: result!.emailData!.payment,
+        });
+        // await emailservice.PaymentReceivedEmail(
+        //   result!.emailData!.email,
+        //   result!.emailData!.course,
+        //   result!.emailData!.firstName,
+        //   result!.emailData!.payment,
+        // );
       } catch (err) {
         // The payment/enrollment already succeeded and is committed — a
         // failed email shouldn't fail the webhook or trigger a Paystack

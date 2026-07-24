@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import emailservice from "../services/emailservice.js";
-
+import { emailQueue } from "../queue/email.queue.js";
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MIN_PASSWORD_LENGTH = 8;
 const JWT_SECRET = process.env.JWT_SECRET || "development-secret";
@@ -71,7 +71,12 @@ export const RegisterUser = async (req: Request, res: Response) => {
         expiresAt: new Date(Date.now() + 1000 * 60 * 60), // 1 hour
       },
     });
-    await emailservice.sendVerificationEmail(User.email, User.firstName, token);
+    emailQueue.add("send-verification-email", {
+      email: User.email,
+      firstName: User.firstName,
+      token,
+    });
+    // await emailservice.sendVerificationEmail(User.email, User.firstName, token);
     res.status(201).json({
       // user: withoutPassword(User),
       message: "User Successfully, Please Check your mail for verification",

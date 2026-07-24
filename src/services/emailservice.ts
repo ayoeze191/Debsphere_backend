@@ -132,12 +132,12 @@ class EmailService {
     payment: {
       amount: number;
       reference: string;
-      paidAt: Date;
+      createdAt: Date;
     },
   ) {
     const courseUrl = `${process.env.FRONTEND_URL}/courses/${course.slug}`;
     const myLearningUrl = `${process.env.FRONTEND_URL}/dashboard/learn`;
-
+    console.log(typeof payment.createdAt, "MY payment");
     const html = await this.loadTemplate("payment-received", {
       firstname: firstName,
       coursetitle: course.title,
@@ -146,7 +146,7 @@ class EmailService {
       lessoncount: String(course.lessonCount),
       amount: payment.amount.toLocaleString("en-NG"),
       reference: payment.reference,
-      paymentdate: payment.paidAt.toLocaleDateString("en-NG", {
+      paymentdate: new Date(payment.createdAt).toLocaleDateString("en-NG", {
         year: "numeric",
         month: "long",
         day: "numeric",
