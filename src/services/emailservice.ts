@@ -17,7 +17,20 @@ class EmailService {
   ) {
     const file = path.join(EMAIL_TEMPLATE_PATH, `${template}.html`);
 
+    console.log("[Email] Template directory:", EMAIL_TEMPLATE_PATH);
+    console.log("[Email] Loading template:", file);
+
+    try {
+      await fs.access(file);
+      console.log("[Email] Template exists");
+    } catch (err) {
+      console.error("[Email] Template not found:", file);
+      throw err;
+    }
+
     let html = await fs.readFile(file, "utf8");
+
+    console.log("[Email] Template loaded. Size:", html.length);
 
     for (const [key, value] of Object.entries(variables)) {
       html = html.replaceAll(`__${key.toUpperCase()}__`, value);
@@ -36,8 +49,28 @@ class EmailService {
       subject,
       html,
     };
-    const response = await this.resend.emails.send(payload);
-    return;
+
+    console.log("[Email] Sending...");
+    console.log({
+      from: payload.from,
+      to: payload.to,
+      subject: payload.subject,
+      htmlLength: html.length,
+    });
+
+    try {
+      const response = await this.resend.emails.send(payload);
+
+      console.log(
+        "[Email] Resend response:",
+        JSON.stringify(response, null, 2),
+      );
+
+      return response;
+    } catch (error) {
+      console.error("[Email] Resend API Error:", error);
+      throw error;
+    }
   }
 
   /**
@@ -83,7 +116,9 @@ class EmailService {
     return this.sendMail(email, "Reset your password", html);
   }
 
-  // payment Received email
+  /**
+   * Payment Received Email
+   */
   async PaymentReceivedEmail(
     email: string,
     course: {
