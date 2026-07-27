@@ -136,8 +136,21 @@ class PaymentController {
         });
 
         if (!alreadyEnrolled) {
+          const firstLesson = await tx.lesson.findFirst({
+            where: { section: { courseId: payment.courseId } },
+            orderBy: [
+              { section: { position: "asc" } },
+              { position: "asc" },
+            ],
+            select: { id: true },
+          });
+
           await tx.enrollment.create({
-            data: { userId: payment.userId, courseId: payment.courseId },
+            data: {
+              userId: payment.userId,
+              courseId: payment.courseId,
+              ...(firstLesson ? { lastLessonId: firstLesson.id } : {}),
+            },
           });
 
           const lessonCount = await Prisma.lesson.count({

@@ -108,11 +108,11 @@ export const LoginUser = async (req: Request, res: Response) => {
     },
   });
 
-  if (!user!.isVerfied) {
-    return res.status(403).json({
-      error: "Please verify your email before logging in.",
-    });
-  }
+  // if (!user!.isVerfied) {
+  //   return res.status(403).json({
+  //     error: "Please verify your email before logging in.",
+  //   });
+  // }
   if (user?.provider == "GOOGLE") {
     return res.status(302).json({
       message: "This account uses Google Sign-In. Please continue with Google.",

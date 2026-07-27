@@ -23,6 +23,7 @@ export const GetCourse = async (req: Request, res: Response) => {
   const course = await Prisma.course.findFirst({
     where: {
       slug,
+      isPublished: true,
     },
     include: {
       sections: {

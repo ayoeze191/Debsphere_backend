@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
+import { createHash } from "node:crypto";
 import {
   UserRole,
   PaymentStatus,
@@ -128,13 +129,11 @@ export const listCategories = async (_req: Request, res: Response) =>
   });
 
 export const createCategory = async (req: Request, res: Response) =>
-  res
-    .status(201)
-    .json({
-      category: await Prisma.category.create({
-        data: { name: requiredString(req.body.name, "Name") },
-      }),
-    });
+  res.status(201).json({
+    category: await Prisma.category.create({
+      data: { name: requiredString(req.body.name, "Name") },
+    }),
+  });
 
 export const updateCategory = async (req: Request, res: Response) =>
   res.json({
@@ -177,26 +176,37 @@ export const createCourse = async (req: Request, res: Response) => {
     duration,
     isPublished,
   } = req.body;
-  const course = await Prisma.course.create({
-    data: {
-      title: requiredString(title, "Title"),
-      slug: requiredString(slug, "Slug"),
-      description: requiredString(description, "Description"),
-      thumbnail: requiredString(thumbnail, "Thumbnail"),
-      price: requiredString(String(price ?? ""), "Price"),
-      instructorId: requiredString(instructorId, "Instructor id"),
-      ...(optionalString(categoryId) === undefined
-        ? {}
-        : { categoryId: optionalString(categoryId) }),
-      ...(optionalString(duration) === undefined
-        ? {}
-        : { duration: optionalString(duration) }),
-      ...(optionalBoolean(isPublished, "isPublished") === undefined
-        ? {}
-        : { isPublished }),
-    } as any,
-  });
-  return res.status(201).json({ course });
+
+  try {
+    const course = await Prisma.course.create({
+      data: {
+        title: requiredString(title, "Title"),
+        slug: requiredString(slug, "Slug"),
+        description: requiredString(description, "Description"),
+        thumbnail: requiredString(thumbnail, "Thumbnail"),
+        price: requiredString(String(price ?? ""), "Price"),
+        instructorId: requiredString(instructorId, "Instructor id"),
+        ...(optionalString(categoryId) === undefined
+          ? {}
+          : { categoryId: optionalString(categoryId) }),
+        ...(optionalString(duration) === undefined
+          ? {}
+          : { duration: optionalString(duration) }),
+        ...(optionalBoolean(isPublished, "isPublished") === undefined
+          ? {}
+          : { isPublished }),
+      } as any,
+    });
+    return res.status(201).json({ course });
+  } catch (e) {
+    if (e instanceof AppError) {
+      return res.status(e.statusCode).json({ message: e.message });
+    }
+    console.error(e); // log the real error server-side for anything unexpected
+    return res
+      .status(500)
+      .json({ message: "Something went wrong creating the course." });
+  }
 };
 
 export const updateCourse = async (req: Request, res: Response) => {
@@ -225,9 +235,23 @@ export const updateCourse = async (req: Request, res: Response) => {
 };
 
 export const deleteCourse = async (req: Request, res: Response) => {
-  await Prisma.course.delete({
-    where: { id: requiredString(req.params.id, "Course id") },
+  const courseId = requiredString(req.params.id, "Course id");
+  const lessons = await Prisma.lesson.findMany({
+    where: { section: { courseId } },
+    select: { videoId: true },
   });
+
+  await Prisma.$transaction([
+    Prisma.enrollment.deleteMany({ where: { courseId } }),
+    Prisma.certificate.deleteMany({ where: { courseId } }),
+    Prisma.payment.deleteMany({ where: { courseId } }),
+    Prisma.lesson.deleteMany({ where: { section: { courseId } } }),
+    Prisma.section.deleteMany({ where: { courseId } }),
+    Prisma.video.deleteMany({
+      where: { id: { in: lessons.flatMap((lesson) => lesson.videoId ? [lesson.videoId] : []) } },
+    }),
+    Prisma.course.delete({ where: { id: courseId } }),
+  ]);
   return res.sendStatus(204);
 };
 
@@ -258,9 +282,13 @@ export const updateSection = async (req: Request, res: Response) =>
   });
 
 export const deleteSection = async (req: Request, res: Response) => {
-  await Prisma.section.delete({
-    where: { id: requiredString(req.params.id, "Section id") },
-  });
+  const id = requiredString(req.params.id, "Section id");
+  const lessons = await Prisma.lesson.findMany({ where: { sectionId: id }, select: { videoId: true } });
+  await Prisma.$transaction([
+    Prisma.lesson.deleteMany({ where: { sectionId: id } }),
+    Prisma.section.delete({ where: { id } }),
+    Prisma.video.deleteMany({ where: { id: { in: lessons.flatMap((lesson) => lesson.videoId ? [lesson.videoId] : []) } } }),
+  ]);
   return res.sendStatus(204);
 };
 
@@ -299,10 +327,40 @@ export const updateLesson = async (req: Request, res: Response) => {
 };
 
 export const deleteLesson = async (req: Request, res: Response) => {
-  await Prisma.lesson.delete({
-    where: { id: requiredString(req.params.id, "Lesson id") },
-  });
+  const id = requiredString(req.params.id, "Lesson id");
+  const lesson = await Prisma.lesson.findUnique({ where: { id }, select: { videoId: true } });
+  await Prisma.$transaction([
+    Prisma.lesson.delete({ where: { id } }),
+    ...(lesson?.videoId ? [Prisma.video.delete({ where: { id: lesson.videoId } })] : []),
+  ]);
   return res.sendStatus(204);
+};
+
+/**
+ * Creates a short-lived Cloudinary upload signature. The browser receives no
+ * secret and uploads files directly to Cloudinary, keeping the API server out
+ * of the large-file upload path.
+ */
+export const createUploadSignature = async (req: Request, res: Response) => {
+  const resourceType = req.body.resourceType;
+  if (resourceType !== "image" && resourceType !== "video") {
+    throw new AppError("resourceType must be image or video", 400);
+  }
+
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+  const apiKey = process.env.CLOUDINARY_API_KEY;
+  const apiSecret = process.env.CLOUDINARY_API_SECRET;
+  if (!cloudName || !apiKey || !apiSecret) {
+    throw new AppError("Cloudinary is not configured on the server", 503);
+  }
+
+  const timestamp = Math.floor(Date.now() / 1000);
+  const folder = `debsphere/${resourceType}s`;
+  const signature = createHash("sha1")
+    .update(`folder=${folder}&timestamp=${timestamp}${apiSecret}`)
+    .digest("hex");
+
+  return res.json({ cloudName, apiKey, timestamp, folder, signature });
 };
 
 export const listEnrollments = async (_req: Request, res: Response) =>
@@ -389,4 +447,79 @@ export const updateVideo = async (req: Request, res: Response) => {
     } as any,
   });
   return res.json({ video });
+};
+
+// export const createVideo = async (req: Request, res: Response) => {
+//   const video = await Prisma.video.create({
+//     data: {
+//       lessonId: requiredString(req.params.lessonId, "Lesson id"),
+//       originalUrl: requiredString(req.body.originalUrl, "Original URL"),
+//       ...(optionalString(req.body.hlsUrl) === undefined
+//         ? {}
+//         : { hlsUrl: optionalString(req.body.hlsUrl) }),
+//       ...(optionalString(req.body.thumbnail) === undefined
+//         ? {}
+//         : { thumbnail: optionalString(req.body.thumbnail) }),
+//       duration: integer(req.body.duration, "Duration"),
+//       status: (req.body.status as VideoStatus) ?? "PENDING",
+//     } as any,
+//   });
+//   return res.status(201).json({ video });
+// };
+
+export const createVideo = async (req: Request, res: Response) => {
+  const lessonId = requiredString(req.params.lessonId, "Lesson id");
+  const originalUrl = requiredString(req.body.originalUrl, "Original URL");
+
+  const lesson = await Prisma.lesson.findUnique({ where: { id: lessonId } });
+  if (!lesson) throw new AppError("Lesson not found", 404);
+  if (lesson.videoId)
+    throw new AppError(
+      "This lesson already has a video attached — use updateVideo to change it",
+      409,
+    );
+
+  const video = await Prisma.video.create({
+    data: {
+      originalUrl,
+      ...(optionalString(req.body.thumbnail) === undefined
+        ? {}
+        : { thumbnail: optionalString(req.body.thumbnail) }),
+      duration: 20,
+      // Bootstrap path: no transcoding pipeline yet, so mark it playable
+      // immediately using the raw file. Switch this to "UPLOADING" once
+      // you wire up real transcoding (Mux, your own ffmpeg worker, etc.)
+      // and let that pipeline flip it to READY via updateVideo.
+      status: "READY",
+    } as any,
+  });
+
+  await Prisma.lesson.update({
+    where: { id: lessonId },
+    data: { videoId: video.id },
+  });
+
+  return res.status(201).json({ video });
+};
+
+export const getCourse = async (req: Request, res: Response) => {
+  const course = await Prisma.course.findUnique({
+    where: { id: requiredString(req.params.id, "Course id") },
+    include: {
+      category: true,
+      instructor: { select: userSelect },
+      sections: {
+        orderBy: { position: "asc" },
+        include: {
+          lessons: {
+            orderBy: { position: "asc" },
+            include: { video: true },
+          },
+        },
+      },
+    },
+  });
+
+  if (!course) throw new AppError("Course not found", 404);
+  return res.json({ course });
 };

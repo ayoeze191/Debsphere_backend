@@ -19,6 +19,7 @@ router.patch("/categories/:id", admin.updateCategory);
 router.delete("/categories/:id", admin.deleteCategory);
 
 router.get("/courses", admin.listCourses);
+router.post("/uploads/signature", admin.createUploadSignature);
 router.post("/courses", admin.createCourse);
 router.patch("/courses/:id", admin.updateCourse);
 router.delete("/courses/:id", admin.deleteCourse);
@@ -30,6 +31,8 @@ router.post("/sections/:sectionId/lessons", admin.createLesson);
 router.patch("/lessons/:id", admin.updateLesson);
 router.delete("/lessons/:id", admin.deleteLesson);
 router.patch("/videos/:id", admin.updateVideo);
+router.post(`/lessons/:lessonId/videos`, admin.createVideo);
+router.get("/courses/:id", admin.getCourse);
 
 router.get("/enrollments", admin.listEnrollments);
 router.delete("/enrollments/:id", admin.deleteEnrollment);
@@ -39,5 +42,6 @@ router.get("/reviews", admin.listReviews);
 router.delete("/reviews/:id", admin.deleteReview);
 router.get("/certificates", admin.listCertificates);
 router.get("/webhook-events", admin.listWebhookEvents);
+// router.post()
 
 export default router;

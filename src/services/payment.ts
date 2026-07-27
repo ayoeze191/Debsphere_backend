@@ -40,8 +40,9 @@ class PaymentService {
             include: {
               category: true,
               sections: {
+                orderBy: { position: "asc" },
                 include: {
-                  lessons: true,
+                  lessons: { orderBy: { position: "asc" } },
                 },
               },
             },
@@ -78,9 +79,10 @@ class PaymentService {
       });
 
       if (!alreadyEnrolled) {
-        const firstLessonId = payment.course.sections.flatMap((section) =>
-          section.lessons.map((lesson) => lesson.id),
-        )[0];
+        // Sections and lessons are ordered above, so this is the actual
+        // first lesson learners should resume from—not merely the first row
+        // returned by the database.
+        const firstLessonId = payment.course.sections[0]?.lessons[0]?.id;
 
         await tx.enrollment.create({
           data: {
